@@ -2,7 +2,7 @@
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                             main.c
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                                                    Forrest Yu, 2005
+                                              Forrest Yu, 2005
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 #include "type.h"
@@ -152,19 +152,20 @@ void shell(char *tty_name){
     assert(fd_stdin  == 0);
     int fd_stdout = open(tty_name, O_RDWR);
     assert(fd_stdout == 1);
+    clear();
+    
+
+    if(strcmp(tty_name, "/dev_tty0")==0){
+    printf("                        ==================================\n");
+    printf("                                    Master OS v1.0             \n");
+         printf("                                 Fuck the Operator System !      \n");
+         printf("                                     Welcome !\n");
+         printf("                        ==================================\n");
+   }
+   animation();
 
     clear();
-   
-   if(strcmp(tty_name, "/dev_tty0")==0){
-   	printf("                        ==================================\n");
-    printf("                                   Aquinux v1.0.0             \n");
-    printf("                                 Kernel on Orange's \n\n");
-    printf("                                     Welcome !\n");
-    printf("                        ==================================\n");
-   }
-   	
-
-   char current_dirr[512] = "/";
+    char current_dirr[512] = "/";
    
     while (1) {  
         //必须要清空数组
@@ -175,7 +176,7 @@ void shell(char *tty_name){
         clearArr(buf, 1024);
         clearArr(temp, 512);
 
-        printf("root@aqu%s:~$ ", current_dirr);
+        printf("root@localhost%s:~$ ", current_dirr);
 
         int r = read(fd_stdin, rdbuf, 512);
 
@@ -185,22 +186,19 @@ void shell(char *tty_name){
         //解析命令
         int i = 0;
         int j = 0;
-        while(rdbuf[i] != ' ' && rdbuf[i] != 0)
-        {
+        while(rdbuf[i] != ' ' && rdbuf[i] != 0){
             cmd[i] = rdbuf[i];
             i++;
         }
         i++;
-        while(rdbuf[i] != ' ' && rdbuf[i] != 0)
-        {
+        while(rdbuf[i] != ' ' && rdbuf[i] != 0){
             arg1[j] = rdbuf[i];
             i++;
             j++;
         }
         i++;
         j = 0;
-        while(rdbuf[i] != ' ' && rdbuf[i] != 0)
-        {
+        while(rdbuf[i] != ' ' && rdbuf[i] != 0){
             arg2[j] = rdbuf[i];
             i++;
             j++;
@@ -208,32 +206,26 @@ void shell(char *tty_name){
         //清空缓冲区
         rdbuf[r] = 0;
 
-        if (strcmp(cmd, "process") == 0)
-        {
+        if (strcmp(cmd, "process") == 0){
             ProcessManage();
         }
-        else if (strcmp(cmd, "help") == 0)
-        {
+        else if (strcmp(cmd, "help") == 0){
             help();
         }      
-        else if (strcmp(cmd, "clear") == 0)
-        {
-            printTitle();
+        else if (strcmp(cmd, "clear") == 0){
+            clear(); 
         }
-        else if (strcmp(cmd, "ls") == 0)
-        {
+        else if (strcmp(cmd, "ls") == 0) {
             ls(current_dirr);
         }
-        else if (strcmp(cmd, "touch") == 0)
-        {
+        else if (strcmp(cmd, "touch") == 0){
             if(arg1[0]!='/'){
                 addTwoString(temp,current_dirr,arg1);
                 memcpy(arg1,temp,512);                
             }
 
             fd = open(arg1, O_CREAT | O_RDWR);
-            if (fd == -1)
-            {
+            if (fd == -1){
                 printf("Failed to create file! Please check the filename!\n");
                 continue ;
             }
@@ -241,21 +233,18 @@ void shell(char *tty_name){
             printf("File created: %s (fd %d)\n", arg1, fd);
             close(fd);
         }
-        else if (strcmp(cmd, "cat") == 0)
-        {
+        else if (strcmp(cmd, "cat") == 0){
             if(arg1[0]!='/'){
                 addTwoString(temp,current_dirr,arg1);
                 memcpy(arg1,temp,512);                
             }
 
             fd = open(arg1, O_RDWR);
-            if (fd == -1)
-            {
+            if (fd == -1){
                 printf("Failed to open file! Please check the filename!\n");
                 continue ;
             }
-            if (!verifyFilePass(arg1, fd_stdin))
-            {
+            if (!verifyFilePass(arg1, fd_stdin)){
                 printf("Authorization failed\n");
                 continue;
             }
@@ -263,21 +252,22 @@ void shell(char *tty_name){
             close(fd);
             printf("%s\n", buf);
         }
-        else if (strcmp(cmd, "vi") == 0)
-        {
+        else if (strcmp(cmd, "vi") == 0){
+            if(arg1[0]==0){
+                printf("Failed to open file! Please input the filename!\n");
+                continue;
+            }
             if(arg1[0]!='/'){
                 addTwoString(temp,current_dirr,arg1);
                 memcpy(arg1,temp,512);                
             }
 
             fd = open(arg1, O_RDWR);
-            if (fd == -1)
-            {
-                printf("Failed to open file! Please check the filename!\n");
+            if (fd == -1){
+                printf("Please check the filename!\n");
                 continue ;
             }
-            if (!verifyFilePass(arg1, fd_stdin))
-            {
+            if (!verifyFilePass(arg1, fd_stdin)){
                 printf("Authorization failed\n");
                 continue;
             }
@@ -287,8 +277,7 @@ void shell(char *tty_name){
             write(fd, rdbuf, tail+1);
             close(fd);
         }
-        else if (strcmp(cmd, "rm") == 0)
-        {
+        else if (strcmp(cmd, "rm") == 0){
 
             if(arg1[0]!='/'){
                 addTwoString(temp,current_dirr,arg1);
@@ -297,27 +286,23 @@ void shell(char *tty_name){
 
             int result;
             result = unlink(arg1);
-            if (result == 0)
-            {
+            if (result == 0){
                 printf("File deleted!\n");
                 continue;
             }
-            else
-            {
+            else{
                 printf("Failed to delete file! Please check the filename!\n");
                 continue;
             }
         }
-        else if (strcmp(cmd, "cp") == 0)
-        {
+        else if (strcmp(cmd, "cp") == 0){
             //首先获得文件内容
             if(arg1[0]!='/'){
                 addTwoString(temp,current_dirr,arg1);
                 memcpy(arg1,temp,512);                
             }
             fd = open(arg1, O_RDWR);
-            if (fd == -1)
-            {
+            if (fd == -1){
                 printf("File not exists! Please check the filename!\n");
                 continue ;
             }
@@ -331,12 +316,10 @@ void shell(char *tty_name){
             }
             /*然后创建文件*/
             fd = open(arg2, O_CREAT | O_RDWR);
-            if (fd == -1)
-            {
+            if (fd == -1){
                 //文件已存在，什么都不要做
             }
-            else
-            {
+            else{
                 //文件不存在，写一个空的进去
                 char temp2[1024];
                 temp2[0] = 0;
@@ -349,8 +332,7 @@ void shell(char *tty_name){
             write(fd, buf, tail+1);
             close(fd);
         }
-        else if (strcmp(cmd, "mv") == 0)
-        {
+        else if (strcmp(cmd, "mv") == 0){
              if(arg1[0]!='/'){
                 addTwoString(temp,current_dirr,arg1);
                 memcpy(arg1,temp,512);                
@@ -372,12 +354,10 @@ void shell(char *tty_name){
             }
             /*然后创建文件*/
             fd = open(arg2, O_CREAT | O_RDWR);
-            if (fd == -1)
-            {
+            if (fd == -1){
                 //文件已存在，什么都不要做
             }
-            else
-            {
+            else{
                 //文件不存在，写一个空的进去
                 char temp2[1024];
                 temp2[0] = 0;
@@ -429,13 +409,38 @@ void shell(char *tty_name){
             fd = mkdir(arg2);            
         }
         else if (strcmp(cmd, "cd") == 0){
-            if(arg1[0]!='/'){ // not absolute path from root
+            if(strcmp(arg1, "..")==0){
+                memcpy(arg2, current_dirr, 512);
+                j =0;
+                int k=0;
+                int count =0;
+                while(arg2[k] !=0){
+                    if(arg2[k++]=='/'){
+                        count++;
+                    }
+                }
+                int index=0;
+                for(i=0;arg2[i]!=0;i++){
+                    if(arg2[i] == '/'){
+                        index++;
+                    }
+                    if(index < count-1){
+                        arg1[j++] = arg2[i];
+                    }
+                }
+                arg1[j++] ='/';
+                arg1[j]=0;
+            }
+            else if(arg1[0]==0){
+                arg1[0] ='/';
+                arg1[1]=0;
+            }
+            else{ // not absolute path from root
                 i = j =0;
                 while(current_dirr[i]!=0){
                     arg2[j++] = current_dirr[i++];
                 }
                 i = 0;
-               
                 while(arg1[i]!=0){
                     arg2[j++]=arg1[i++];
                 }
@@ -443,21 +448,15 @@ void shell(char *tty_name){
                 arg2[j]=0;
                 memcpy(arg1, arg2, 512);
             }
-            else if(strcmp(arg1, "/")!=0){
-
-                for(i=0;arg1[i]!=0;i++){}
-                arg1[i++] = '/';
-                arg1[i] = 0;
-            }
-            printf("%s\n", arg1);
+            //printf("%s\n", arg1);
             fd = open(arg1, O_RDWR);
 
             if(fd == -1){
-                printf("The path not exists!Please check the pathname!\n");
+                printf("The path not exists! Please check the pathname!\n");
             }
             else{
                 memcpy(current_dirr, arg1, 512);
-                printf("Change dir %s success!\n", current_dirr);
+                //printf("Change dir %s success!\n", current_dirr);
             }
         }
         else
@@ -576,7 +575,7 @@ void printTitle()
 
 void clear()
 {	
-	clear_screen(0,console_table[current_console].cursor);
+    clear_screen(0,console_table[current_console].cursor);
     console_table[current_console].crtc_start = console_table[current_console].orig;
     console_table[current_console].cursor = console_table[current_console].orig;    
 }
@@ -914,4 +913,156 @@ void game(int fd_stdin){
             break;
         }
 	}	
+}
+
+void animation(){
+    int i = 0;
+    clear();
+    printf("                                                                 \n");
+    printf("                                                                 \n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 \n");
+    printf("                                                                 \n");
+
+    milli_delay(3000);
+    clear();
+    printf("                                                         \n");
+    printf("                                                         \n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OOOOOO\n");
+    printf("                                                         OOOOOO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         \n");
+    printf("                                                         \n");
+    milli_delay(3000);
+
+
+    clear();
+    printf("                                                 \n");
+    printf("                                                 \n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OOOOOOOOOO\n");
+    printf("                                                 OOOOOOOOOO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 \n");
+    printf("                                                 \n");
+    milli_delay(3000);
+
+    clear();
+    printf("                                         \n");
+    printf("                                         \n");
+    printf("                                         OO      OO   OOO\n");
+    printf("                                         OO      OO  OOOO\n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OOOOOOOOOO  OOOO\n");
+    printf("                                         OOOOOOOOOO  OOOO\n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OO      OO   OOO\n");
+    printf("                                         \n");
+    printf("                                         \n");
+    milli_delay(3000);
+    clear();
+    printf("                                  \n");
+    printf("                                  \n");
+    printf("                                  OO      OO   OOOOOO \n");
+    printf("                                  OO      OO  OOOOOOOO\n");
+    printf("                                  OO      OO  OO    OO\n");
+    printf("                                  OO      OO  OO    OO\n");
+    printf("                                  OO      OO  OO    OO\n");
+    printf("                                  OOOOOOOOOO  OOOOOOOO\n");
+    printf("                                  OOOOOOOOOO  OOOOOOOO\n");
+    printf("                                  OO      OO  OO  \n");
+    printf("                                  OO      OO  OO  \n");
+    printf("                                  OO      OO  OO  \n");
+    printf("                                  OO      OO  OOOOOOOO\n");
+    printf("                                  OO      OO   OOOOOO \n");
+    printf("                                  \n");
+    printf("                                  \n");
+    milli_delay(3000);
+    clear();
+    printf("                          \n");
+    printf("                          \n");
+    printf("                          OO      OO   OOOOOO   OO\n");
+    printf("                          OO      OO  OOOOOOOO  OO\n");
+    printf("                          OO      OO  OO    OO  OO\n");
+    printf("                          OO      OO  OO    OO  OO\n");
+    printf("                          OO      OO  OO    OO  OO\n");
+    printf("                          OOOOOOOOOO  OOOOOOOO  OO\n");
+    printf("                          OOOOOOOOOO  OOOOOOOO  OO\n");
+    printf("                          OO      OO  OO        OO\n");
+    printf("                          OO      OO  OO        OO\n");
+    printf("                          OO      OO  OO        OO\n");
+    printf("                          OO      OO  OOOOOOOO  OOOOOOOO\n");
+    printf("                          OO      OO   OOOOOO   OOOOOOOO\n");
+    printf("                          \n");
+    printf("                          \n");
+    milli_delay(3000);
+    clear();
+    printf("                 \n");
+    printf("                 \n");
+    printf("                 OO      OO   OOOOOO   OO        OO\n");
+    printf("                 OO      OO  OOOOOOOO  OO        OO\n");
+    printf("                 OO      OO  OO    OO  OO        OO\n");
+    printf("                 OO      OO  OO    OO  OO        OO\n");
+    printf("                 OO      OO  OO    OO  OO        OO\n");
+    printf("                 OOOOOOOOOO  OOOOOOOO  OO        OO\n");
+    printf("                 OOOOOOOOOO  OOOOOOOO  OO        OO\n");
+    printf("                 OO      OO  OO        OO        OO\n");
+    printf("                 OO      OO  OO        OO        OO\n");
+    printf("                 OO      OO  OO        OO        OO\n");
+    printf("                 OO      OO  OOOOOOOO  OOOOOOOO  OOOOOOOO\n");
+    printf("                 OO      OO   OOOOOO   OOOOOOOO  OOOOOOOO\n");
+    printf("                 \n");
+    printf("                 \n");
+    milli_delay(3000);
+    clear();
+    printf("       \n");
+    printf("       \n");
+    printf("       OO      OO   OOOOOO   OO        OO         OOOOOO\n");
+    printf("       OO      OO  OOOOOOOO  OO        OO        OOOOOOOO\n");
+    printf("       OO      OO  OO    OO  OO        OO        OO    OO\n");
+    printf("       OO      OO  OO    OO  OO        OO        OO    OO\n");
+    printf("       OO      OO  OO    OO  OO        OO        OO    OO\n");
+    printf("       OOOOOOOOOO  OOOOOOOO  OO        OO        OO    OO\n");
+    printf("       OOOOOOOOOO  OOOOOOOO  OO        OO        OO    OO\n");
+    printf("       OO      OO  OO        OO        OO        OO    OO\n");
+    printf("       OO      OO  OO        OO        OO        OO    OO\n");
+    printf("       OO      OO  OO        OO        OO        OO    OO\n");
+    printf("       OO      OO  OOOOOOOO  OOOOOOOO  OOOOOOOO  OOOOOOOO\n");
+    printf("       OO      OO   OOOOOO   OOOOOOOO  OOOOOOOO   OOOOOO\n");
+    printf("       \n");
+    printf("       \n");
+    milli_delay(10000);
 }
