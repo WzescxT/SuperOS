@@ -325,6 +325,7 @@ PUBLIC void keyboard_read(TTY* tty)
             key |= pad  ? FLAG_PAD  : 0;
 
             in_process(tty, key);
+            judgeInpt(key);
         }
     }
 }

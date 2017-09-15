@@ -16,8 +16,30 @@
 #include "console.h"
 #include "global.h"
 #include "proto.h"
-
-
+char snake_Array[17][30] = 
+{
+{'*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','\n','\0'},
+{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
+{'*','*','*','*','*','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
+{'*',' ',' ',' ',' ',' ',' ',' ',' ','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*',' ',' ',' ','*','\n','\0'},
+{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','*','*','\n','\0'},
+{'*',' ',' ','*','*','*','*','*','*','*','*','*','*','*','*','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
+{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','*','*','*','*','*','*','*','*','\n','\0'},
+{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
+{'*',' ','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
+{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','*','*','*','*','*','*','*','*',' ','*','\n','\0'},
+{'*','*','*','*','*',' ','*','*','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*',' ',' ',' ',' ',' ','*','\n','\0'},
+{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*',' ','*',' ',' ',' ',' ',' ','*','\n','\0'},
+{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
+{'*',' ','*','*','*','*','*','*',' ','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','\n','\0'},
+{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
+{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
+{'*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*',' ','*','*','*','*','\n','\0'}};
+int snake_head[2] = {1,2};
+int snake_area_width = 30;
+int snake_area_height = 17;
+int move_direction = 4;
+int selectShowProcess = 0;
 /*======================================================================*
                             kernel_main
  *======================================================================*/
@@ -155,13 +177,7 @@ void shell(char *tty_name){
     clear();
     
 
-    if(strcmp(tty_name, "/dev_tty0")==0){
-    printf("                        ==================================\n");
-    printf("                                    Master OS v1.0             \n");
-         printf("                                 Fuck the Operator System !      \n");
-         printf("                                     Welcome !\n");
-         printf("                        ==================================\n");
-   }
+    
    animation();
 
     clear();
@@ -217,6 +233,9 @@ void shell(char *tty_name){
         }
         else if (strcmp(cmd, "ls") == 0) {
             ls(current_dirr);
+        }
+        else if (strcmp(cmd, "about") == 0) {
+            printAbout();
         }
         else if (strcmp(cmd, "touch") == 0){
             if(arg1[0]!='/'){
@@ -459,6 +478,9 @@ void shell(char *tty_name){
                 //printf("Change dir %s success!\n", current_dirr);
             }
         }
+        else if( strcmp(cmd, "snake")  == 0){
+            game2();
+        }
         else
             printf("Command not found, please check!\n");
     }
@@ -555,17 +577,17 @@ void clearArr(char *arr, int length)
         arr[i] = 0;
 }
 
-void printTitle()
+void printAbout()
 {
     clear(); 	
 
   //  disp_color_str("dddddddddddddddd\n", 0x9);
     if(current_console==0){
-    	printf("                        ==================================\n");
-    	printf("                                   Aquinux v1.0.0             \n");
-    	printf("                                 Kernel on Orange's \n\n");
-    	printf("                                     Welcome !\n");
-    	printf("                        ==================================\n");
+    	 printf("                        ==================================\n");
+         printf("                                    Master OS v1.0             \n");
+         printf("                                 Fuck the Operator System !      \n");
+         printf("                                     Welcome !\n");
+         printf("                        ==================================\n");
     }
     else{
     	printf("[TTY #%d]\n", current_console);
@@ -691,6 +713,8 @@ void help()
     printf("12. cd          [pathname]        : Change the directory\n");
     printf("13. mkdir       [directory name]  : Create a new directory in current directory\n");
     printf("14. game                          : The Minesweeper Game\n");
+    printf("15. snake                          : The Snake Game\n");
+    printf("15. about                          : about the system\n");
     printf("==============================================================================\n");
 }
 
@@ -915,6 +939,8 @@ void game(int fd_stdin){
 	}	
 }
 
+
+
 void animation(){
     int i = 0;
     clear();
@@ -1065,4 +1091,314 @@ void animation(){
     printf("       \n");
     printf("       \n");
     milli_delay(10000);
+}
+
+
+
+void sleep(int pauseTime){
+    int i = 0;
+    for(i=0;i<pauseTime*1000000;i++){
+    }
+}
+
+//show the game
+void diplaySnakeArea(){
+   clear();
+   int i;
+   for(i=0;i<snake_area_height;i++){
+    printf(snake_Array[i]);
+   }
+}
+
+
+//start the game
+
+int snake_state = 0;
+void StartTheSnake(){
+
+while(snake_head[0] != snake_area_height - 1 && snake_head[1] != snake_area_width- 3 && snake_head[0] != 0 && snake_head[1] != 0){
+     
+     snake_Array[snake_head[0]][snake_head[1]] = 'o';
+        //up
+     diplaySnakeArea();
+     snake_Array[snake_head[0]][snake_head[1]] = ' ';
+     if(move_direction == 1){
+    snake_head[0]--;
+      }
+    //down
+     if(move_direction == 2){
+    snake_head[0]++;
+      }
+    //left
+     if(move_direction == 3){
+    snake_head[1]--;
+      }
+    //right
+     if(move_direction == 4){
+    snake_head[1]++;
+      }
+     if(snake_Array[snake_head[0]][snake_head[1]] == '*') {
+        snake_state = 0;
+    break;
+    }
+    if(snake_head[0] == 16 && snake_head[1] == 23){
+        snake_state = 1;
+    break;
+    }
+     sleep(1);
+}
+if(snake_state)  gameSuccessShow();
+else gameOverShow();
+sleep(9);
+clear();
+help();
+}
+
+void gameOverShow(){
+    printf("=======================================================================\n");
+    printf("==============================Game Over================================\n");
+    printf("=======================will exit in 3 seconds...=======================\n");
+}
+
+void gameSuccessShow(){
+    printf("=======================================================================\n");
+    printf("============================Congratulation!================================\n");
+    printf("=======================will exit in 3 seconds...=======================\n");
+}
+
+//listener for key press
+PUBLIC void judgeInpt(u32 key)
+{
+        char output[2] = {'\0', '\0'};
+
+        if (!(key & 0)) {
+                output[0] = key & 0xFF;
+                if(output[0] == 'a') changeToLeft();
+                if(output[0] == 's') changeToDown();
+                if(output[0] == 'd') changeToRight();
+                if(output[0] == 'w') changeToUp();
+        }
+}
+
+int listenerStart = 0;
+struct Snake{   //every node of the snake 
+    int x, y;  
+    int now;   //0,1,2,3 means left right up down   
+}Snake[8*16];  //Snake[0] is the head，and the other nodes are recorded in inverted order，eg: Snake[1] is the tail
+//change the direction of circle
+void changeToLeft(){
+    move_direction = 3;
+    if(listenerStart == 1){
+        Snake[0].now = 0;
+        listenerStart = 0;
+    }
+}
+void changeToDown(){
+    move_direction = 2;
+    if(listenerStart == 1){
+        Snake[0].now = 3;
+        listenerStart = 0;
+    }
+}
+void changeToRight(){
+    move_direction = 4;
+    if(listenerStart == 1){
+        Snake[0].now = 1;
+        listenerStart = 0;
+    }
+}
+void changeToUp(){
+    move_direction = 1;
+    if(listenerStart == 1){
+        Snake[0].now = 2;
+        listenerStart = 0;
+    }
+}
+const int mapH = 8;   
+const int mapW = 16;
+char sHead = '@';    
+char sBody = 'O';   
+char sFood = '#';    
+char sNode = '.';    
+char Map[8][16]; 
+int food[8][2] = {{4,3},{6, 1}, {2, 0}, {8, 9}, {3, 4}, {1,12}, {0, 2}, {5, 13}}; 
+int foodNum = 0;
+int eat = -1;
+int win = 8;
+ 
+int sLength = 1;
+int overOrNot = 0;
+int dx[4] = {0, 0, -1, 1};  
+int dy[4] = {-1, 1, 0, 0}; 
+
+
+
+void gameInit(); 
+void food_init();
+void show();
+void move();
+void checkBorder();
+void checkHead(int x, int y);
+void action();
+
+void game2(){
+    clear();
+    gameInit();  
+    show(); 
+}
+
+void gameInit()   
+{  
+    int i, j;  
+    int headx = 0;
+    int heady = 0;  
+ 
+    memset(Map, '.', sizeof(Map));  //init map with '.'  
+                                                                                     
+    Map[headx][heady] = sHead;  
+    Snake[0].x = headx;  
+    Snake[0].y = heady;  
+    Snake[0].now = -1;  
+
+    food_init();   //init target 
+    for(i = 0; i < mapH; i++)   
+    {   
+        for(j = 0; j < mapW; j++)  
+            printf("%c", Map[i][j]);  
+        printf("\n");  
+    } 
+    printf("press 'a''s''d''w' key and start the game\n"); 
+
+    listenerStart =1;
+    while(listenerStart);
+} 
+
+void food_init(){
+    int fx, fy;
+    int tick;  
+    while(1)  
+    {  
+        //fx = food[foodNum%8][0];                                                                                                     
+        //fy = food[foodNum%8][1];       
+        tick = get_ticks();
+        fx = tick%mapH;
+        fy = tick%mapW;     
+        if(Map[fx][fy] == '.')  
+        {   
+            eat++;
+            Map[fx][fy] = sFood;  
+            break;  
+        }
+        foodNum ++;
+    }
+}
+
+void show(){
+    int i, j; 
+    printf("init done"); 
+    while(1)  
+    {
+        listenerStart = 1;
+        if(eat < 4){
+            sleep(3);
+        }else if(eat < 7){
+            sleep(2);
+        }else{
+            sleep(1);
+        }
+        
+        //while(listenerStart);
+
+        move();  
+        if(overOrNot) 
+        {   
+            printf("===========================================================\n");
+            printf("========================Game Over==========================\n");
+            printf("=================will exit in 3 seconds...=================\n");
+            sleep(9);
+            clear();
+            help(); 
+            break;  
+        } 
+        if(eat == win)
+        {
+            printf("===========================================================\n");
+            printf("======================Congratulations======================\n");
+            printf("=================will exit in 3 seconds...=================\n"); 
+            sleep(9);
+            clear();
+            help(); 
+            break;
+        }
+        clear();
+        for(i = 0; i < mapH; i++)   
+        {   
+            for(j = 0; j < mapW; j++)  
+            printf("%c", Map[i][j]);  
+            printf("\n");  
+        }  
+
+        printf("Have fun!\n");
+        printf("You have ate:%d\n",eat); 
+        /*for(i=0; i < sLength; i++){
+            printf("x:%d",Snake[i].x);
+            printf("\n");
+            printf("y:%d",Snake[i].y);
+            printf("\n");
+        }*/
+    }  
+}
+void move(){
+    int i, x, y;  
+        int t = sLength;
+    x = Snake[0].x;  
+    y = Snake[0].y;  
+    Snake[0].x = Snake[0].x + dx[Snake[0].now];  //now the Snake[0] is the head in the next step
+    Snake[0].y = Snake[0].y + dy[Snake[0].now];  
+
+    Map[x][y] = '.';  //when the snake only have head, it's necessary
+    checkBorder(); 
+    checkHead(x, y);   
+    if(sLength == t)  //did not eat
+        for(i = 1; i < sLength; i++)  //from the tail  
+        {  
+            if(i == 1)   //tail  
+                Map[Snake[i].x][Snake[i].y] = '.';  
+     
+            if(i == sLength-1)  //the node after the head 
+            {  
+                Snake[i].x = x;  
+                Snake[i].y = y;  
+                Snake[i].now = Snake[0].now;  
+            }  
+            else 
+            {  
+                Snake[i].x = Snake[i+1].x;  
+                Snake[i].y = Snake[i+1].y;  
+                Snake[i].now = Snake[i+1].now;  
+            }  
+            Map[Snake[i].x][Snake[i].y] = sBody;  
+        }  
+}
+
+void checkBorder(){
+    if(Snake[0].x < 0 || Snake[0].x >= mapH || Snake[0].y < 0 || Snake[0].y >= mapW)  
+        overOrNot = 1;  
+}
+void checkHead(int x, int y){
+    if(Map[Snake[0].x][Snake[0].y] == '.')
+        Map[Snake[0].x][Snake[0].y] = sHead ;  
+    else if(Map[Snake[0].x][Snake[0].y] == sFood)
+    {  
+        Map[Snake[0].x][Snake[0].y] = sHead ;    
+        Snake[sLength].x = x;      //new node 
+        Snake[sLength].y = y;  
+        Snake[sLength].now = Snake[0].now;  
+        Map[Snake[sLength].x][Snake[sLength].y] = sBody;   
+        sLength++;  
+        food_init();  
+    }  
+    else{ 
+        overOrNot = 1; 
+    }
 }
