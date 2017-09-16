@@ -79,7 +79,7 @@ PUBLIC int do_open()
 
     struct inode * pin = 0;
 
-    printl("test1\n");
+
 
     if (flags & O_CREAT) {
         if (inode_nr) {
@@ -97,10 +97,10 @@ PUBLIC int do_open()
         char filename[MAX_PATH];
         struct inode * dir_inode;
         if (strip_path(filename, pathname, &dir_inode) != 0){
-            printl("filename:%s, pathname:%s\n", filename, pathname);
+            //printl("filename:%s, pathname:%s\n", filename, pathname);
             return -1;
         }
-        printl("filename:%s, pathname:%s\n", filename, pathname);
+        //printl("filename:%s, pathname:%s\n", filename, pathname);
         pin = get_inode(dir_inode->i_dev, inode_nr);
     }
 
@@ -167,6 +167,7 @@ PRIVATE struct inode * create_file(char * path, int flags)
     if (strip_path(filename, path, &dir_inode) != 0)
         return 0;
 
+    printl("%d %d", dir_inode->i_dev, dir_inode->i_mode);
     int inode_nr = alloc_imap_bit(dir_inode->i_dev);
     int free_sect_nr = alloc_smap_bit(dir_inode->i_dev,
                       NR_DEFAULT_FILE_SECTS);
@@ -243,12 +244,6 @@ PUBLIC int do_ls()
     pathname[name_len] = 0;
 
     int i, j;
-
-    /*printl("DO something \n");*/
-    /*char pathname[MAX_PATH] = "passwd";*/
-    /*int inode_nr = search_file(pathname);*/
-
-    //struct inode * dir_inode = root_inode;
     struct inode * dir_inode;
     char filename[20];
     strip_path(filename, pathname,&dir_inode);
@@ -259,31 +254,30 @@ PUBLIC int do_ls()
     int m = 0;
 
     struct dir_entry * pde;
-
-    printl("\ninode        filename\n");
-    printl("============================\n");
-
-    for (i = 0; i < nr_dir_blks; i++)
-    {
+    for (i = 0; i < nr_dir_blks; i++){
+        //printl("%d %d\n", dir_inode->i_dev,nr_dir_blks);
         RD_SECT(dir_inode->i_dev, dir_blk0_nr + i);
 
         pde = (struct dir_entry *)fsbuf;
-
-        for (j = 0; j < SECTOR_SIZE / DIR_ENTRY_SIZE; j++, pde++)
-        {
+        for (j = 0; j < SECTOR_SIZE / DIR_ENTRY_SIZE; j++, pde++){
             /*struct inode *n = find_inode(pde->inode_nr);*/
-            printl("  %2d        %s\n", pde->inode_nr , pde->name);
-            if (++m >= nr_dir_entries){
+             printl("%s", pde->name);
+            for(int l=strlen(pde->name); l < 15; l++){
+                printl(" ");
+            }
+            if(m % 4 == 3) {
                 printl("\n");
+            }
+            if (++m >= nr_dir_entries){
                 break;
             }
+        }
+        if(m%4 != 0){
+            printl("\n");
         }
         if (m > nr_dir_entries) //[> all entries have been iterated <]
             break;
     }
-
-    printl("============================\n");
-
     return 0;
 }
 

@@ -195,17 +195,18 @@ PUBLIC int strip_path(char * filename, const char * pathname,
             m = 0;
             pde = 0;
             *t = 0;
-            //printl("filename:%s\n",filename);
+            //printl("filename-strip: %s\n",filename);
             for (i = 0; i < nr_dir_blks && flag==0; i++) {
                 RD_SECT(pinode_now->i_dev, dir_blk0_nr + i);
                 pde = (struct dir_entry *)fsbuf;
+                //printl("%d  %d\n",SECTOR_SIZE , DIR_ENTRY_SIZE );
                 for (j = 0; j < SECTOR_SIZE / DIR_ENTRY_SIZE; j++,pde++) {
                     //printl("pde->name:%s\n", pde->name);
                     if (strcmp(filename, pde->name) == 0){
                         ptemp = get_inode(pinode_now->i_dev, pde->inode_nr);
                         //printl("out\n");
                         if(ptemp->i_mode == I_DIRECTORY){
-                           // printl("in\n");
+                           //printl("in\n");
                             pinode_now = ptemp;
                             flag = 1;
                             break;
