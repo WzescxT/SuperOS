@@ -166,8 +166,7 @@ PRIVATE struct inode * create_file(char * path, int flags)
     struct inode * dir_inode;
     if (strip_path(filename, path, &dir_inode) != 0)
         return 0;
-
-    printl("%d %d", dir_inode->i_dev, dir_inode->i_mode);
+    //printl("%d %d %d %d %s\n", dir_inode->i_dev, dir_inode->i_mode, dir_inode->i_start_sect, dir_inode->i_size, path);
     int inode_nr = alloc_imap_bit(dir_inode->i_dev);
     int free_sect_nr = alloc_smap_bit(dir_inode->i_dev,
                       NR_DEFAULT_FILE_SECTS);
@@ -175,7 +174,7 @@ PRIVATE struct inode * create_file(char * path, int flags)
                      free_sect_nr, I_REGULAR);
 
     new_dir_entry(dir_inode, newino->i_num, filename);
-
+    //printl("%d %d %d %d %s\n", newino->i_dev, newino->i_mode, newino->i_start_sect, newino->i_size,filename);
     return newino;
 }
 
