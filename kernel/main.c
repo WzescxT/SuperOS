@@ -210,8 +210,9 @@ void shell(char *tty_name){
             ProcessManage();
         }
         else if(strcmp(rdbuf,"kill 4") == 0 ){
-            proc_table[4].p_flags = 1;
-            ProcessManage();
+//            proc_table[4].p_flags = 1;
+//            ProcessManage();
+            printf("cant kill this process!");
         }
         else if(strcmp(rdbuf,"kill 5") == 0 ){
             proc_table[5].p_flags = 1;
@@ -587,8 +588,7 @@ void clear(){
     console_table[current_console].cursor = console_table[current_console].orig;    
 }
 
-void doTest(char *path)
-{
+void doTest(char *path) {
     struct dir_entry *pde = find_entry(path);
     printl(pde->name);
     printl("\n");
@@ -596,8 +596,7 @@ void doTest(char *path)
     printl("\n");
 }
 
-int verifyFilePass(char *path, int fd_stdin)
-{
+int verifyFilePass(char *path, int fd_stdin) {
     char pass[128];
 
     struct dir_entry *pde = find_entry(path);
@@ -616,8 +615,7 @@ int verifyFilePass(char *path, int fd_stdin)
     return 0;
 }
 
-void doEncrypt(char *path, int fd_stdin)
-{
+void doEncrypt(char *path, int fd_stdin) {
     //search the file
     /*struct dir_entry *pde = find_entry(path);*/
 
@@ -626,8 +624,7 @@ void doEncrypt(char *path, int fd_stdin)
     printl("Please input the new file password: ");
     read(fd_stdin, pass, 128);
 
-    if (strcmp(pass, "") == 0)
-    {
+    if (strcmp(pass, "") == 0) {
         /*printl("A blank password!\n");*/
         strcpy(pass, "");
     }
@@ -643,7 +640,6 @@ void doEncrypt(char *path, int fd_stdin)
 
     if (filename[0] == 0)   /* path: "/" */
         return dir_inode->i_num;
-
     /**
      * Search the dir for the file.
      */
@@ -717,6 +713,35 @@ void ProcessManage()
     printf("=                 kill   [pid]  kill the process                            =\n");
     printf("=                 up     [pid]  improve the process priority                =\n");
     printf("=============================================================================\n");
+}
+
+
+/*======================================================================*
+                            welcome animation
+ *======================================================================*/
+void animation(){
+    clear();
+    printf("             OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
+    printf("             O**********************O**********************O\n");
+    printf("             O*********OOOO*********O*********OOOO*OO******O\n");
+    printf("             O*******OOOOOOOO*******O*******OOOOOOOOO******O\n");
+    printf("             O******OOOO**OOOO******O*******OOO**OOOO******O\n");
+    printf("             O*****OOOO****OOOO*****O******OOO****OOO******O\n");
+    printf("             O****OOOO******OOOO****O******OOOO****OO******O\n");
+    printf("             O****OOO*******OOOO****O*******OOOO***********O\n");
+    printf("             O****OOO*******OOOO****O*******OOOOOO*********O\n");
+    printf("             O****OOO********OOO****O********OOOOOOO*******O\n");
+    printf("             O****OOO********OOO****O*********OOOOOOO******O\n");
+    printf("             O****OOO*******OOOO****O***********OOOOO******O\n");
+    printf("             O****OOO*******OOOO****O******OO****OOOOO*****O\n");
+    printf("             O****OOOO******OOOO****O******OO*****OOOO*****O\n");
+    printf("             O*****OOOO****OOOO*****O******OOO****OOO******O\n");
+    printf("             O******OOOOOOOOOO******O******OOOOOOOOOO******O\n");
+    printf("             O*******OOOOOOOO*******O******OOOOOOOOO*******O\n");
+    printf("             O**********************O**********************O\n");
+    printf("             OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
+    milli_delay(40000);
+    clear();
 }
 
 
@@ -903,34 +928,6 @@ void game(int fd_stdin){
             break;
         }
 	}	
-}
-
-/*======================================================================*
-                            welcome animation
- *======================================================================*/
-void animation(){
-    clear();
-    printf("             OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
-    printf("             O**********************O**********************O\n");
-    printf("             O*********OOOO*********O*********OOOO*OO******O\n");
-    printf("             O*******OOOOOOOO*******O*******OOOOOOOOO******O\n");
-    printf("             O******OOOO**OOOO******O*******OOO**OOOO******O\n");
-    printf("             O*****OOOO****OOOO*****O******OOO****OOO******O\n");
-    printf("             O****OOOO******OOOO****O******OOOO****OO******O\n");
-    printf("             O****OOO*******OOOO****O*******OOOO***********O\n");
-    printf("             O****OOO*******OOOO****O*******OOOOOO*********O\n");
-    printf("             O****OOO********OOO****O********OOOOOOO*******O\n");
-    printf("             O****OOO********OOO****O*********OOOOOOO******O\n");
-    printf("             O****OOO*******OOOO****O***********OOOOO******O\n");
-    printf("             O****OOO*******OOOO****O******OO****OOOOO*****O\n");
-    printf("             O****OOOO******OOOO****O******OO*****OOOO*****O\n");
-    printf("             O*****OOOO****OOOO*****O******OOO****OOO******O\n");
-    printf("             O******OOOOOOOOOO******O******OOOOOOOOOO******O\n");
-    printf("             O*******OOOOOOOO*******O******OOOOOOOOO*******O\n");
-    printf("             O**********************O**********************O\n");
-    printf("             OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
-    milli_delay(40000);
-    clear();
 }
 
 
@@ -1123,8 +1120,7 @@ void move(){
     checkBorder(); 
     checkHead(x, y);   
     if(sLength == t)  //did not eat
-        for(i = 1; i < sLength; i++)  //from the tail  
-        {  
+        for(i = 1; i < sLength; i++){
             if(i == 1)   //tail  
                 Map[Snake[i].x][Snake[i].y] = '.';  
      
@@ -1158,8 +1154,7 @@ void checkBorder(){
 void checkHead(int x, int y){
     if(Map[Snake[0].x][Snake[0].y] == '.')
         Map[Snake[0].x][Snake[0].y] = sHead ;  
-    else if(Map[Snake[0].x][Snake[0].y] == sFood)
-    {  
+    else if(Map[Snake[0].x][Snake[0].y] == sFood) {
         Map[Snake[0].x][Snake[0].y] = sHead ;    
         Snake[sLength].x = x;                //new node
         Snake[sLength].y = y;  
@@ -1186,7 +1181,7 @@ void showGameOver(){
  */
 void showGameSuccess(){
     printf("=======================================================================\n");
-    printf("============================Congratulation!================================\n");
+    printf("============================Congratulation!============================\n");
     printf("=======================will exit in 3 seconds...=======================\n");
 }
 /**
