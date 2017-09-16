@@ -37,13 +37,16 @@ struct proc {
 
     int ticks;                 /* remained ticks */
     int priority;
+    int run_count;           /*time block*/
 
     u32 pid;                   /* process id passed in from MM */
     char name[16];         /* name of the process */
 
-    int  p_flags;              /**
+    int run_state;
+
+    int  p_flags;          /**
                             * process flags.
-                            * A proc is runnable iff p_flags==0
+                            * A proc is runnable if p_flags==0
                             */
 
     MESSAGE * p_msg;
@@ -51,9 +54,9 @@ struct proc {
     int p_sendto;
 
     int has_int_msg;           /**
-                    * nonzero if an INTERRUPT occurred when
-                    * the task is not ready to deal with it.
-                    */
+                                * nonzero if an INTERRUPT occurred when
+                                * the task is not ready to deal with it.
+                                */
 
     struct proc * q_sending;   /**
                     * queue of procs sending messages to
