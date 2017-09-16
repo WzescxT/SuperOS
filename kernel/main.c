@@ -417,7 +417,7 @@ void shell(char *tty_name){
             doTest(arg1);
         }
         else if (strcmp(cmd, "game") == 0){
-        	game(fd_stdin);
+        	   game(fd_stdin);
         }
         else if (strcmp(cmd, "mkdir") == 0){
             i = j =0;

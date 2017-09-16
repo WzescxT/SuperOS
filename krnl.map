@@ -333,7 +333,7 @@ LOAD fs/disklog.o
  *(.plt.got)
  .plt.got       0x0000000008048098        0x0 kernel/kernel.o
 
-.text           0x0000000000001000    0x10184
+.text           0x0000000000001000    0x10150
  *(.text.unlikely .text.*_unlikely .text.unlikely.*)
  *(.text.exit .text.exit.*)
  *(.text.startup .text.startup.*)
@@ -556,12 +556,12 @@ LOAD fs/disklog.o
                 0x000000000000eb25                strip_path
  .text          0x000000000000ed29      0x54e fs/read_write.o
                 0x000000000000ed29                do_rdwt
- .text          0x000000000000f277      0x8ca fs/link.o
+ .text          0x000000000000f277      0x896 fs/link.o
                 0x000000000000f277                do_unlink
- .text          0x000000000000fb41     0x1643 fs/disklog.o
-                0x000000000000fb41                do_disklog
-                0x000000000000fbfb                disklog
-                0x0000000000010136                dump_fd_graph
+ .text          0x000000000000fb0d     0x1643 fs/disklog.o
+                0x000000000000fb0d                do_disklog
+                0x000000000000fbc7                disklog
+                0x0000000000010102                dump_fd_graph
  *(.gnu.warning)
 
 .fini
@@ -570,40 +570,40 @@ LOAD fs/disklog.o
                 [!provide]                        PROVIDE (_etext, .)
                 [!provide]                        PROVIDE (etext, .)
 
-.rodata         0x00000000000111a0     0x8bef
+.rodata         0x0000000000011160     0x8bdf
  *(.rodata .rodata.* .gnu.linkonce.r.*)
- .rodata        0x00000000000111a0       0x47 kernel/start.o
- *fill*         0x00000000000111e7        0x1 
- .rodata        0x00000000000111e8     0x1284 kernel/main.o
-                0x00000000000122b0                mapH
-                0x00000000000122b4                mapW
- .rodata        0x000000000001246c       0x64 kernel/keyboard.o
- .rodata        0x00000000000124d0      0x13c kernel/tty.o
- .rodata        0x000000000001260c       0x5b kernel/console.o
- .rodata        0x0000000000012667       0x11 kernel/i8259.o
- .rodata        0x0000000000012678        0x4 kernel/global.o
-                0x0000000000012678                FSBUF_SIZE
- *fill*         0x000000000001267c        0x4 
- .rodata        0x0000000000012680      0x540 kernel/protect.o
- .rodata        0x0000000000012bc0      0x62e kernel/proc.o
- .rodata        0x00000000000131ee       0x11 kernel/systask.o
- *fill*         0x00000000000131ff        0x1 
- .rodata        0x0000000000013200      0x140 kernel/hd.o
- .rodata        0x0000000000013340       0x14 lib/printf.o
- .rodata        0x0000000000013354     0x5c40 lib/sl.o
- .rodata        0x0000000000018f94       0x61 lib/misc.o
- .rodata        0x0000000000018ff5       0x24 lib/mkdir.o
- .rodata        0x0000000000019019       0x23 lib/open.o
- .rodata        0x000000000001903c       0x25 lib/getpid.o
- .rodata        0x0000000000019061       0x32 lib/syslog.o
- *fill*         0x0000000000019093        0x1 
- .rodata        0x0000000000019094      0x26e fs/main.o
- *fill*         0x0000000000019302        0x2 
- .rodata        0x0000000000019304      0x150 fs/open.o
- .rodata        0x0000000000019454      0x164 fs/read_write.o
- .rodata        0x00000000000195b8      0x1ad fs/link.o
- *fill*         0x0000000000019765        0x3 
- .rodata        0x0000000000019768      0x627 fs/disklog.o
+ .rodata        0x0000000000011160       0x47 kernel/start.o
+ *fill*         0x00000000000111a7        0x1 
+ .rodata        0x00000000000111a8     0x1284 kernel/main.o
+                0x0000000000012270                mapH
+                0x0000000000012274                mapW
+ .rodata        0x000000000001242c       0x64 kernel/keyboard.o
+ .rodata        0x0000000000012490      0x13c kernel/tty.o
+ .rodata        0x00000000000125cc       0x5b kernel/console.o
+ .rodata        0x0000000000012627       0x11 kernel/i8259.o
+ .rodata        0x0000000000012638        0x4 kernel/global.o
+                0x0000000000012638                FSBUF_SIZE
+ *fill*         0x000000000001263c        0x4 
+ .rodata        0x0000000000012640      0x540 kernel/protect.o
+ .rodata        0x0000000000012b80      0x62e kernel/proc.o
+ .rodata        0x00000000000131ae       0x11 kernel/systask.o
+ *fill*         0x00000000000131bf        0x1 
+ .rodata        0x00000000000131c0      0x140 kernel/hd.o
+ .rodata        0x0000000000013300       0x14 lib/printf.o
+ .rodata        0x0000000000013314     0x5c40 lib/sl.o
+ .rodata        0x0000000000018f54       0x61 lib/misc.o
+ .rodata        0x0000000000018fb5       0x24 lib/mkdir.o
+ .rodata        0x0000000000018fd9       0x23 lib/open.o
+ .rodata        0x0000000000018ffc       0x25 lib/getpid.o
+ .rodata        0x0000000000019021       0x32 lib/syslog.o
+ *fill*         0x0000000000019053        0x1 
+ .rodata        0x0000000000019054      0x26e fs/main.o
+ *fill*         0x00000000000192c2        0x2 
+ .rodata        0x00000000000192c4      0x150 fs/open.o
+ .rodata        0x0000000000019414      0x164 fs/read_write.o
+ .rodata        0x0000000000019578      0x19d fs/link.o
+ *fill*         0x0000000000019715        0x3 
+ .rodata        0x0000000000019718      0x627 fs/disklog.o
 
 .rodata1
  *(.rodata1)
@@ -612,69 +612,69 @@ LOAD fs/disklog.o
  *(.eh_frame_hdr)
  *(.eh_frame_entry .eh_frame_entry.*)
 
-.eh_frame       0x0000000000019d90     0x1770
+.eh_frame       0x0000000000019d40     0x1770
  *(.eh_frame)
- .eh_frame      0x0000000000019d90        0x0 kernel/kernel.o
- .eh_frame      0x0000000000019d90       0x50 kernel/start.o
- .eh_frame      0x0000000000019de0      0x5b8 kernel/main.o
+ .eh_frame      0x0000000000019d40        0x0 kernel/kernel.o
+ .eh_frame      0x0000000000019d40       0x50 kernel/start.o
+ .eh_frame      0x0000000000019d90      0x5b8 kernel/main.o
                                         0x5e4 (松开之前的大小)
- .eh_frame      0x000000000001a398       0x6c kernel/clock.o
+ .eh_frame      0x000000000001a348       0x6c kernel/clock.o
                                          0x98 (松开之前的大小)
- .eh_frame      0x000000000001a404       0xfc kernel/keyboard.o
+ .eh_frame      0x000000000001a3b4       0xfc kernel/keyboard.o
                                         0x128 (松开之前的大小)
- .eh_frame      0x000000000001a500      0x15c kernel/tty.o
+ .eh_frame      0x000000000001a4b0      0x15c kernel/tty.o
                                         0x19c (松开之前的大小)
- .eh_frame      0x000000000001a65c      0x16c kernel/console.o
+ .eh_frame      0x000000000001a60c      0x16c kernel/console.o
                                         0x1c0 (松开之前的大小)
- .eh_frame      0x000000000001a7c8       0x6c kernel/i8259.o
+ .eh_frame      0x000000000001a778       0x6c kernel/i8259.o
                                          0x98 (松开之前的大小)
- .eh_frame      0x000000000001a834       0xb8 kernel/protect.o
+ .eh_frame      0x000000000001a7e4       0xb8 kernel/protect.o
                                          0xf8 (松开之前的大小)
- .eh_frame      0x000000000001a8ec      0x20c kernel/proc.o
+ .eh_frame      0x000000000001a89c      0x20c kernel/proc.o
                                         0x260 (松开之前的大小)
- .eh_frame      0x000000000001aaf8       0x1c kernel/systask.o
+ .eh_frame      0x000000000001aaa8       0x1c kernel/systask.o
                                          0x48 (松开之前的大小)
- .eh_frame      0x000000000001ab14      0x220 kernel/hd.o
+ .eh_frame      0x000000000001aac4      0x220 kernel/hd.o
                                         0x260 (松开之前的大小)
- .eh_frame      0x000000000001ad34       0x48 lib/printf.o
+ .eh_frame      0x000000000001ace4       0x48 lib/printf.o
                                          0x74 (松开之前的大小)
- .eh_frame      0x000000000001ad7c       0x68 lib/vsprintf.o
+ .eh_frame      0x000000000001ad2c       0x68 lib/vsprintf.o
                                          0xa8 (松开之前的大小)
- .eh_frame      0x000000000001ade4       0x84 lib/klib.o
+ .eh_frame      0x000000000001ad94       0x84 lib/klib.o
                                          0xc4 (松开之前的大小)
- .eh_frame      0x000000000001ae68       0x24 lib/ls.o
+ .eh_frame      0x000000000001ae18       0x24 lib/ls.o
                                          0x50 (松开之前的大小)
- .eh_frame      0x000000000001ae8c       0x24 lib/sl.o
+ .eh_frame      0x000000000001ae3c       0x24 lib/sl.o
                                          0x50 (松开之前的大小)
- .eh_frame      0x000000000001aeb0       0xc4 lib/misc.o
+ .eh_frame      0x000000000001ae60       0xc4 lib/misc.o
                                         0x104 (松开之前的大小)
- .eh_frame      0x000000000001af74       0x24 lib/mkdir.o
+ .eh_frame      0x000000000001af24       0x24 lib/mkdir.o
                                          0x50 (松开之前的大小)
- .eh_frame      0x000000000001af98       0x24 lib/open.o
+ .eh_frame      0x000000000001af48       0x24 lib/open.o
                                          0x50 (松开之前的大小)
- .eh_frame      0x000000000001afbc       0x24 lib/read.o
+ .eh_frame      0x000000000001af6c       0x24 lib/read.o
                                          0x50 (松开之前的大小)
- .eh_frame      0x000000000001afe0       0x24 lib/write.o
+ .eh_frame      0x000000000001af90       0x24 lib/write.o
                                          0x50 (松开之前的大小)
- .eh_frame      0x000000000001b004       0x24 lib/close.o
+ .eh_frame      0x000000000001afb4       0x24 lib/close.o
                                          0x50 (松开之前的大小)
- .eh_frame      0x000000000001b028       0x24 lib/unlink.o
+ .eh_frame      0x000000000001afd8       0x24 lib/unlink.o
                                          0x50 (松开之前的大小)
- .eh_frame      0x000000000001b04c       0x24 lib/getpid.o
+ .eh_frame      0x000000000001affc       0x24 lib/getpid.o
                                          0x50 (松开之前的大小)
- .eh_frame      0x000000000001b070       0x24 lib/syslog.o
+ .eh_frame      0x000000000001b020       0x24 lib/syslog.o
                                          0x50 (松开之前的大小)
- .eh_frame      0x000000000001b094      0x150 fs/main.o
+ .eh_frame      0x000000000001b044      0x150 fs/main.o
                                         0x190 (松开之前的大小)
- .eh_frame      0x000000000001b1e4      0x1b4 fs/open.o
+ .eh_frame      0x000000000001b194      0x1b4 fs/open.o
                                         0x1f4 (松开之前的大小)
- .eh_frame      0x000000000001b398       0x84 fs/misc.o
+ .eh_frame      0x000000000001b348       0x84 fs/misc.o
                                          0xb0 (松开之前的大小)
- .eh_frame      0x000000000001b41c       0x30 fs/read_write.o
+ .eh_frame      0x000000000001b3cc       0x30 fs/read_write.o
                                          0x5c (松开之前的大小)
- .eh_frame      0x000000000001b44c       0x30 fs/link.o
+ .eh_frame      0x000000000001b3fc       0x30 fs/link.o
                                          0x5c (松开之前的大小)
- .eh_frame      0x000000000001b47c       0x84 fs/disklog.o
+ .eh_frame      0x000000000001b42c       0x84 fs/disklog.o
                                          0xb0 (松开之前的大小)
  *(.eh_frame.*)
 

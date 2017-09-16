@@ -64,7 +64,7 @@ PUBLIC int do_unlink()
 
 	struct inode * pin = get_inode(dir_inode->i_dev, inode_nr);
 
-	//printl("%d %d %d %d %s\n",pin->i_dev, pin->i_mode, pin->i_start_sect,pin->i_size, pathname);
+	//printl("%d %d %d %d %s %d %d\n",pin->i_dev, pin->i_mode, pin->i_start_sect,pin->i_size, pathname,inode_nr,SECTOR_SIZE);
 	if (pin->i_mode != I_REGULAR) { /* can only remove regular files */
 		printl("cannot remove file %s, because "
 		       "it is not a regular file.\n",
