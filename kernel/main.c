@@ -16,37 +16,11 @@
 #include "console.h"
 #include "global.h"
 #include "proto.h"
-char snake_Array[17][30] = 
-{
-{'*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','\n','\0'},
-{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
-{'*','*','*','*','*','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
-{'*',' ',' ',' ',' ',' ',' ',' ',' ','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*',' ',' ',' ','*','\n','\0'},
-{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','*','*','\n','\0'},
-{'*',' ',' ','*','*','*','*','*','*','*','*','*','*','*','*','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
-{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','*','*','*','*','*','*','*','*','\n','\0'},
-{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
-{'*',' ','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
-{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','*','*','*','*','*','*','*','*',' ','*','\n','\0'},
-{'*','*','*','*','*',' ','*','*','*','*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*',' ',' ',' ',' ',' ','*','\n','\0'},
-{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*',' ','*',' ',' ',' ',' ',' ','*','\n','\0'},
-{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
-{'*',' ','*','*','*','*','*','*',' ','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','\n','\0'},
-{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
-{'*',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','*','\n','\0'},
-{'*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*',' ','*','*','*','*','\n','\0'}};
-int snake_head[2] = {1,2};
-int snake_area_width = 30;
-int snake_area_height = 17;
-int move_direction = 4;
-int selectShowProcess = 0;
 /*======================================================================*
                             kernel_main
  *======================================================================*/
-PUBLIC int kernel_main()
-{
+PUBLIC int kernel_main() {
     disp_str("-----\"kernel_main\" begins-----\n");
-
     struct task* p_task;
     struct proc* p_proc= proc_table;
     char* p_task_stack = task_stack + STACK_SIZE_TOTAL;
@@ -57,31 +31,29 @@ PUBLIC int kernel_main()
     int   i, j;
     int   prio;
 
-    //似乎可以加开机动画
-
-    //启动进程
+    // start the process
     for (i = 0; i < NR_TASKS+NR_PROCS; i++)
     /*for (i = 0; i < NR_TASKS; i++)*/
     {
         if (i < NR_TASKS)
-        {   /* 任务 */
+        {   /* task */
             p_task    = task_table + i;
             privilege = PRIVILEGE_TASK;
             rpl       = RPL_TASK;
             eflags    = 0x1202; /* IF=1, IOPL=1, bit 2 is always 1   1 0010 0000 0010(2)*/
-            prio      = 15;     //设定优先级为15
+            prio      = 15;     //set the priority to 15
         }
         else
-        {   /* 用户进程 */
+        {   /* user process */
             p_task    = user_proc_table + (i - NR_TASKS);
             privilege = PRIVILEGE_USER;
             rpl       = RPL_USER;
             eflags    = 0x202; /* IF=1, bit 2 is always 1              0010 0000 0010(2)*/
-            prio      = 5;     //设定优先级为5
+            prio      = 5;     //set the priority to 5
         }
 
-        strcpy(p_proc->name, p_task->name); /* 设定进程名称 */
-        p_proc->pid = i;            /* 设定pid */
+        strcpy(p_proc->name, p_task->name); /* set prio name */
+        p_proc->pid = i;            /* set pid */
 
         p_proc->ldt_sel = selector_ldt;
 
@@ -121,7 +93,7 @@ PUBLIC int kernel_main()
         selector_ldt += 1 << 3;
     }
 
-    //初始化进程
+    // init process
     k_reenter = 0;
     ticks = 0;
 
@@ -178,13 +150,13 @@ void shell(char *tty_name){
     
 
     
-   animation();
+    animation();  // the start animation
 
     clear();
     char current_dirr[512] = "/";
    
-    while (1) {  
-        //必须要清空数组
+    while (1) {
+        // clear the array ！
         clearArr(rdbuf, 512);
         clearArr(cmd, 512);
         clearArr(arg1, 512);
@@ -193,13 +165,9 @@ void shell(char *tty_name){
         clearArr(temp, 512);
 
         printf("root@localhost%s:~$ ", current_dirr);
-
         int r = read(fd_stdin, rdbuf, 512);
-
         if (strcmp(rdbuf, "") == 0)
             continue;
-
-        //解析命令
         int i = 0;
         int j = 0;
         while(rdbuf[i] != ' ' && rdbuf[i] != 0){
@@ -219,7 +187,7 @@ void shell(char *tty_name){
             i++;
             j++;
         }
-        //清空缓冲区
+        // clear
         rdbuf[r] = 0;
 
         if (strcmp(cmd, "process") == 0){
@@ -315,7 +283,7 @@ void shell(char *tty_name){
             }
         }
         else if (strcmp(cmd, "cp") == 0){
-            //首先获得文件内容
+            //get the content of file
             if(arg1[0]!='/'){
                 addTwoString(temp,current_dirr,arg1);
                 memcpy(arg1,temp,512);                
@@ -333,20 +301,20 @@ void shell(char *tty_name){
                 addTwoString(temp,current_dirr,arg2);
                 memcpy(arg2,temp,512);                
             }
-            /*然后创建文件*/
+            /*create the file*/
             fd = open(arg2, O_CREAT | O_RDWR);
             if (fd == -1){
-                //文件已存在，什么都不要做
+                //file exist
             }
             else{
-                //文件不存在，写一个空的进去
+                //file not exist or create file
                 char temp2[1024];
                 temp2[0] = 0;
                 write(fd, temp2, 1);
                 close(fd);
             }
              
-            //给文件赋值
+            //set file to value
             fd = open(arg2, O_RDWR);
             write(fd, buf, tail+1);
             close(fd);
@@ -356,7 +324,7 @@ void shell(char *tty_name){
                 addTwoString(temp,current_dirr,arg1);
                 memcpy(arg1,temp,512);                
             }
-            //首先获得文件内容
+            //get the content of file first
             fd = open(arg1, O_RDWR);
             if (fd == -1)
             {
@@ -371,24 +339,23 @@ void shell(char *tty_name){
                 addTwoString(temp,current_dirr,arg2);
                 memcpy(arg2,temp,512);                
             }
-            /*然后创建文件*/
+            /*create the file*/
             fd = open(arg2, O_CREAT | O_RDWR);
             if (fd == -1){
-                //文件已存在，什么都不要做
+                //file exist
             }
             else{
-                //文件不存在，写一个空的进去
+                //file not exist or create file
                 char temp2[1024];
                 temp2[0] = 0;
                 write(fd, temp2, 1);
                 close(fd);
             }
-             
-            //给文件赋值
+            // set file to value
             fd = open(arg2, O_RDWR);
             write(fd, buf, tail+1);
             close(fd);
-            //最后删除文件
+            // delete the file
             unlink(arg1);
         }   
         else if (strcmp(cmd, "encrypt") == 0)
@@ -479,7 +446,7 @@ void shell(char *tty_name){
             }
         }
         else if( strcmp(cmd, "snake")  == 0){
-            game2();
+            snakeGame();
         }
         else
             printf("Command not found, please check!\n");
@@ -490,14 +457,14 @@ void shell(char *tty_name){
                                TestA
  *======================================================================*/
 
-//A进程
+//A process
 void TestA()
 {
-    //0号终端
+    //0 terminel
     char tty_name[] = "/dev_tty0";
     //char username[128];
     //char password[128];
-   shell(tty_name);
+    shell(tty_name);
 
 }
 
@@ -505,7 +472,7 @@ void TestA()
                                TestB
  *======================================================================
 */
-//B进程
+//B process
 void TestB()
 {
 	char tty_name[] = "/dev_tty1";
@@ -514,7 +481,7 @@ void TestB()
 	assert(0); /* never arrive here */
 }
 
-//C进程
+//C process
 void TestC()
 {
     //char tty_name[] = ;
@@ -633,7 +600,7 @@ int verifyFilePass(char *path, int fd_stdin)
 
 void doEncrypt(char *path, int fd_stdin)
 {
-    //查找文件
+    //search the file
     /*struct dir_entry *pde = find_entry(path);*/
 
     char pass[128] = {0};
@@ -646,7 +613,7 @@ void doEncrypt(char *path, int fd_stdin)
         /*printl("A blank password!\n");*/
         strcpy(pass, "");
     }
-    //以下内容用于加密
+    //encrypt the file
     int i, j;
 
     char filename[MAX_PATH];
@@ -679,7 +646,7 @@ void doEncrypt(char *path, int fd_stdin)
         {
             if (memcmp(filename, pde->name, MAX_FILENAME_LEN) == 0)
             {
-                //刷新文件
+                // delete the file
                 strcpy(pde->pass, pass);
                 WR_SECT(dir_inode->i_dev, dir_blk0_nr + i);
                 return;
@@ -713,8 +680,8 @@ void help()
     printf("12. cd          [pathname]        : Change the directory\n");
     printf("13. mkdir       [directory name]  : Create a new directory in current directory\n");
     printf("14. game                          : The Minesweeper Game\n");
-    printf("15. snake                          : The Snake Game\n");
-    printf("15. about                          : about the system\n");
+    printf("15. snake                         : The Snake Game\n");
+    printf("15. about                         : about the system\n");
     printf("==============================================================================\n");
 }
 
@@ -723,9 +690,9 @@ void ProcessManage()
     int i;
     printf("=============================================================================\n");
     printf("      myID      |    name       | spriority    | running?\n");
-    //进程号，进程名，优先级，是否是系统进程，是否在运行
+    //pid，name，proority，is system process，isRuning
     printf("-----------------------------------------------------------------------------\n");
-    for ( i = 0 ; i < NR_TASKS + NR_PROCS ; ++i )//逐个遍历
+    for ( i = 0 ; i < NR_TASKS + NR_PROCS ; ++i )
     {
         /*if ( proc_table[i].priority == 0) continue;//系统资源跳过*/
         printf("        %d           %s            %d                yes\n", proc_table[i].pid, proc_table[i].name, proc_table[i].priority);
@@ -733,7 +700,10 @@ void ProcessManage()
     printf("=============================================================================\n");
 }
 
-//游戏运行库
+
+/*======================================================================*
+                            Minesweeper Game
+ *======================================================================*/
 unsigned int _seed2 = 0xDEADBEEF;
 
 void srand(unsigned int seed){
@@ -810,16 +780,6 @@ void init_game(int *mat, int mat_state[100]){
 		}
 	}
 	show_mat(mat,mat_state,-1,-1,0);
-	/*for (x = 0; x < 10; x++){
-		printf("  %d", x);
-	}
-	for (x = 0; x < 10; x++){
-		printf("\n%d ", x);
-		for (y = 0; y < 10; y++){
-			printf("%d  ", mat[x * 10 + y]);
-		}
-	}
-	printf("\n");*/
 }
 
 int check(int x, int y, int *mat){
@@ -870,7 +830,7 @@ void game(int fd_stdin){
 	char keys[128];
 	int x, y, left_coin = 100,temp;
 	int flag = 1;
-	
+
 	while (flag == 1){
 		init_game(mat, mat_state);
 		left_coin = 100;
@@ -929,7 +889,7 @@ void game(int fd_stdin){
 		printf("Do you want to continue?(yes ot no)\n");
 		clearArr(keys, 128);
         int r = read(fd_stdin, keys, 128);
-      //  printf("%s\n",keys);
+        //  printf("%s\n",keys);
         if (keys[0]=='n' && keys[1]=='o' && keys[2]==0)
         {
         	flag = 0;
@@ -939,10 +899,10 @@ void game(int fd_stdin){
 	}	
 }
 
-
-
+/*======================================================================*
+                            welcome animation
+ *======================================================================*/
 void animation(){
-    int i = 0;
     clear();
     printf("                                                                 \n");
     printf("                                                                 \n");
@@ -1090,231 +1050,159 @@ void animation(){
     printf("       OO      OO   OOOOOO   OOOOOOOO  OOOOOOOO   OOOOOO\n");
     printf("       \n");
     printf("       \n");
-    milli_delay(10000);
+    milli_delay(8000);
 }
 
 
+/*======================================================================*
+                            snake game
+ *======================================================================*/
 
-void sleep(int pauseTime){
-    int i = 0;
-    for(i=0;i<pauseTime*1000000;i++){
-    }
-}
-
-//show the game
-void diplaySnakeArea(){
-   clear();
-   int i;
-   for(i=0;i<snake_area_height;i++){
-    printf(snake_Array[i]);
-   }
-}
-
-
-//start the game
-
-int snake_state = 0;
-void StartTheSnake(){
-
-while(snake_head[0] != snake_area_height - 1 && snake_head[1] != snake_area_width- 3 && snake_head[0] != 0 && snake_head[1] != 0){
-     
-     snake_Array[snake_head[0]][snake_head[1]] = 'o';
-        //up
-     diplaySnakeArea();
-     snake_Array[snake_head[0]][snake_head[1]] = ' ';
-     if(move_direction == 1){
-    snake_head[0]--;
-      }
-    //down
-     if(move_direction == 2){
-    snake_head[0]++;
-      }
-    //left
-     if(move_direction == 3){
-    snake_head[1]--;
-      }
-    //right
-     if(move_direction == 4){
-    snake_head[1]++;
-      }
-     if(snake_Array[snake_head[0]][snake_head[1]] == '*') {
-        snake_state = 0;
-    break;
-    }
-    if(snake_head[0] == 16 && snake_head[1] == 23){
-        snake_state = 1;
-    break;
-    }
-     sleep(1);
-}
-if(snake_state)  gameSuccessShow();
-else gameOverShow();
-sleep(9);
-clear();
-help();
-}
-
-void gameOverShow(){
-    printf("=======================================================================\n");
-    printf("==============================Game Over================================\n");
-    printf("=======================will exit in 3 seconds...=======================\n");
-}
-
-void gameSuccessShow(){
-    printf("=======================================================================\n");
-    printf("============================Congratulation!================================\n");
-    printf("=======================will exit in 3 seconds...=======================\n");
-}
-
-//listener for key press
-PUBLIC void judgeInpt(u32 key)
-{
-        char output[2] = {'\0', '\0'};
-
-        if (!(key & 0)) {
-                output[0] = key & 0xFF;
-                if(output[0] == 'a') changeToLeft();
-                if(output[0] == 's') changeToDown();
-                if(output[0] == 'd') changeToRight();
-                if(output[0] == 'w') changeToUp();
-        }
+/**
+ *  listen the keybord
+ * @param key
+ * @return
+ */
+PUBLIC void judgeInpt(u32 key) {
+    char output[2] = {'\0', '\0'};
+    output[0] = key & 0xFF;
+    if(output[0] == 'a') changeToLeft();
+    if(output[0] == 's') changeToDown();
+    if(output[0] == 'd') changeToRight();
+    if(output[0] == 'w') changeToUp();
 }
 
 int listenerStart = 0;
+
 struct Snake{   //every node of the snake 
     int x, y;  
     int now;   //0,1,2,3 means left right up down   
-}Snake[8*16];  //Snake[0] is the head，and the other nodes are recorded in inverted order，eg: Snake[1] is the tail
+}Snake[15*35];  //Snake[0] is the head，and the other nodes are recorded in inverted order，eg: Snake[1] is the tail
+
+
 //change the direction of circle
 void changeToLeft(){
-    move_direction = 3;
     if(listenerStart == 1){
         Snake[0].now = 0;
         listenerStart = 0;
     }
 }
 void changeToDown(){
-    move_direction = 2;
     if(listenerStart == 1){
         Snake[0].now = 3;
         listenerStart = 0;
     }
 }
 void changeToRight(){
-    move_direction = 4;
     if(listenerStart == 1){
         Snake[0].now = 1;
         listenerStart = 0;
     }
 }
 void changeToUp(){
-    move_direction = 1;
     if(listenerStart == 1){
         Snake[0].now = 2;
         listenerStart = 0;
     }
 }
-const int mapH = 8;   
-const int mapW = 16;
-char sHead = '@';    
-char sBody = 'O';   
-char sFood = '#';    
+
+const int mapH = 15;
+const int mapW = 35;
+char sHead = '@';
+char sBody = 'O';
+char sFood = '$';
 char sNode = '.';    
-char Map[8][16]; 
-int food[8][2] = {{4,3},{6, 1}, {2, 0}, {8, 9}, {3, 4}, {1,12}, {0, 2}, {5, 13}}; 
+char Map[15][35]; // the map of snake
+int food[15][2] = {{5, 13},{6, 10}, {17, 15}, {8, 9}, {3, 4}, {1,12}, {0, 2}, {5, 23},
+                   {15, 13},{16, 10}, {7, 15}, {8, 19}, {3, 14}, {11,12}, {10, 2}};
 int foodNum = 0;
 int eat = -1;
-int win = 8;
+int win = 15;  // the length of win
  
 int sLength = 1;
 int overOrNot = 0;
 int dx[4] = {0, 0, -1, 1};  
 int dy[4] = {-1, 1, 0, 0}; 
 
-
-
-void gameInit(); 
-void food_init();
+void initGame(); 
+void initFood();
 void show();
 void move();
 void checkBorder();
 void checkHead(int x, int y);
 void action();
-
-void game2(){
+void showGameSuccess();
+void showGameSuccess();
+void sleep(float pauseTime);
+/**
+ * enter the snake game
+ */
+void snakeGame(){
     clear();
-    gameInit();  
+    initGame();  
     show(); 
 }
-
-void gameInit()   
-{  
+/**
+ * init game
+ */
+void initGame() {
     int i, j;  
     int headx = 0;
-    int heady = 0;  
- 
-    memset(Map, '.', sizeof(Map));  //init map with '.'  
-                                                                                     
+    int heady = 0;
+    memset(Map, '.', sizeof(Map));   //init map with '.'
     Map[headx][heady] = sHead;  
     Snake[0].x = headx;  
     Snake[0].y = heady;  
-    Snake[0].now = -1;  
-
-    food_init();   //init target 
-    for(i = 0; i < mapH; i++)   
-    {   
+    Snake[0].now = -1;
+    initFood();   //init target 
+    for(i = 0; i < mapH; i++){
         for(j = 0; j < mapW; j++)  
             printf("%c", Map[i][j]);  
         printf("\n");  
     } 
-    printf("press 'a''s''d''w' key and start the game\n"); 
-
-    listenerStart =1;
+    printf("press 'a''s''d''w' key and start the game\n");
+    listenerStart = 1;
     while(listenerStart);
-} 
+}
 
-void food_init(){
+/**
+ * the food location
+ */
+void initFood(){
     int fx, fy;
     int tick;  
-    while(1)  
-    {  
-        //fx = food[foodNum%8][0];                                                                                                     
-        //fy = food[foodNum%8][1];       
+    while(1){
         tick = get_ticks();
         fx = tick%mapH;
         fy = tick%mapW;     
-        if(Map[fx][fy] == '.')  
-        {   
+        if(Map[fx][fy] == '.'){
             eat++;
             Map[fx][fy] = sFood;  
             break;  
         }
-        foodNum ++;
+        foodNum++;
     }
 }
 
+/**
+ * show game situation
+ */
 void show(){
     int i, j; 
-    printf("init done"); 
-    while(1)  
-    {
+    printf("Load snake game ...");
+    while(1){
         listenerStart = 1;
-        if(eat < 4){
-            sleep(3);
-        }else if(eat < 7){
-            sleep(2);
+        if(eat < 5){
+            sleep(2.0);
+        }else if(eat < 10){
+            sleep(1.5);
         }else{
-            sleep(1);
+            sleep(1.0);
         }
-        
-        //while(listenerStart);
-
         move();  
         if(overOrNot) 
-        {   
-            printf("===========================================================\n");
-            printf("========================Game Over==========================\n");
-            printf("=================will exit in 3 seconds...=================\n");
+        {
+            showGameOver();
             sleep(9);
             clear();
             help(); 
@@ -1322,9 +1210,7 @@ void show(){
         } 
         if(eat == win)
         {
-            printf("===========================================================\n");
-            printf("======================Congratulations======================\n");
-            printf("=================will exit in 3 seconds...=================\n"); 
+            showGameSuccess();
             sleep(9);
             clear();
             help(); 
@@ -1338,25 +1224,22 @@ void show(){
             printf("\n");  
         }  
 
-        printf("Have fun!\n");
-        printf("You have ate:%d\n",eat); 
-        /*for(i=0; i < sLength; i++){
-            printf("x:%d",Snake[i].x);
-            printf("\n");
-            printf("y:%d",Snake[i].y);
-            printf("\n");
-        }*/
+        printf("           Have fun!\n");
+        printf("       You have ate:%d\n",eat);
     }  
 }
+/**
+ * snake move function
+ */
 void move(){
     int i, x, y;  
-        int t = sLength;
+    int t = sLength;
     x = Snake[0].x;  
     y = Snake[0].y;  
-    Snake[0].x = Snake[0].x + dx[Snake[0].now];  //now the Snake[0] is the head in the next step
+    Snake[0].x = Snake[0].x + dx[Snake[0].now]; 
     Snake[0].y = Snake[0].y + dy[Snake[0].now];  
 
-    Map[x][y] = '.';  //when the snake only have head, it's necessary
+    Map[x][y] = '.'; 
     checkBorder(); 
     checkHead(x, y);   
     if(sLength == t)  //did not eat
@@ -1380,25 +1263,58 @@ void move(){
             Map[Snake[i].x][Snake[i].y] = sBody;  
         }  
 }
-
+/**
+ *
+ */
 void checkBorder(){
     if(Snake[0].x < 0 || Snake[0].x >= mapH || Snake[0].y < 0 || Snake[0].y >= mapW)  
         overOrNot = 1;  
 }
+/**
+ *
+ * @param x
+ * @param y
+ */
 void checkHead(int x, int y){
     if(Map[Snake[0].x][Snake[0].y] == '.')
         Map[Snake[0].x][Snake[0].y] = sHead ;  
     else if(Map[Snake[0].x][Snake[0].y] == sFood)
     {  
         Map[Snake[0].x][Snake[0].y] = sHead ;    
-        Snake[sLength].x = x;      //new node 
+        Snake[sLength].x = x;                //new node
         Snake[sLength].y = y;  
         Snake[sLength].now = Snake[0].now;  
         Map[Snake[sLength].x][Snake[sLength].y] = sBody;   
         sLength++;  
-        food_init();  
+        initFood();  
     }  
     else{ 
         overOrNot = 1; 
+    }
+}
+/**
+ *
+ */
+void showGameOver(){
+    printf("=======================================================================\n");
+    printf("==============================Game Over================================\n");
+    printf("=======================will exit in 3 seconds...=======================\n");
+}
+
+/**
+ *
+ */
+void showGameSuccess(){
+    printf("=======================================================================\n");
+    printf("============================Congratulation!================================\n");
+    printf("=======================will exit in 3 seconds...=======================\n");
+}
+/**
+ *
+ * @param pauseTime
+ */
+void sleep(float pauseTime){
+    int i = 0;
+    for(i=0;i<pauseTime*1000000;i++){
     }
 }
