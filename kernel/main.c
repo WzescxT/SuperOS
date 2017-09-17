@@ -112,8 +112,7 @@ PUBLIC int kernel_main() {
 /*****************************************************************************
  *                                get_ticks
  *****************************************************************************/
-PUBLIC int get_ticks()
-{
+PUBLIC int get_ticks() {
     MESSAGE msg;
     reset_msg(&msg);
     msg.type = GET_TICKS;
@@ -121,17 +120,19 @@ PUBLIC int get_ticks()
     return msg.RETVAL;
 }
 
-PUBLIC void addTwoString(char *to_str,char *from_str1,char *from_str2){
-    int i=0,j=0;
-    while(from_str1[i]!=0)
+PUBLIC void addTwoString(char *to_str,char *from_str1,char *from_str2) {
+    int i = 0, j = 0;
+    while (from_str1[i] != 0) {
         to_str[j++]=from_str1[i++];
-    i=0;
-    while(from_str2[i]!=0)
+    }
+    i = 0;
+    while (from_str2[i] != 0) {
         to_str[j++]=from_str2[i++];
+    }
     to_str[j]=0;
 }
 
-void shell(char *tty_name){
+void shell(char *tty_name) {
     int fd;
     //int isLogin = 0;
     char rdbuf[512];
@@ -158,23 +159,24 @@ void shell(char *tty_name){
 
         printf("root@localhost%s:~$ ", current_dirr);
         int r = read(fd_stdin, rdbuf, 512);
-        if (strcmp(rdbuf, "") == 0)
+        if (strcmp(rdbuf, "") == 0) {
             continue;
+        }
         int i = 0;
         int j = 0;
-        while(rdbuf[i] != ' ' && rdbuf[i] != 0){
+        while ((rdbuf[i] != ' ') && (rdbuf[i] != 0)) {
             cmd[i] = rdbuf[i];
             i++;
         }
         i++;
-        while(rdbuf[i] != ' ' && rdbuf[i] != 0){
+        while ((rdbuf[i] != ' ') && (rdbuf[i] != 0)) {
             arg1[j] = rdbuf[i];
             i++;
             j++;
         }
         i++;
         j = 0;
-        while(rdbuf[i] != ' ' && rdbuf[i] != 0){
+        while ((rdbuf[i] != ' ') && (rdbuf[i] != 0)) {
             arg2[j] = rdbuf[i];
             i++;
             j++;
@@ -182,13 +184,13 @@ void shell(char *tty_name){
         // clear
         rdbuf[r] = 0;
 
-        if (strcmp(cmd, "process") == 0){
+        if (strcmp(cmd, "process") == 0) {
             ProcessManage();
         }
-        else if (strcmp(cmd, "help") == 0){
+        else if (strcmp(cmd, "help") == 0) {
             help();
         }      
-        else if (strcmp(cmd, "clear") == 0){
+        else if (strcmp(cmd, "clear") == 0) {
             clear(); 
         }
         else if (strcmp(cmd, "ls") == 0) {
@@ -197,63 +199,63 @@ void shell(char *tty_name){
         else if (strcmp(cmd, "about") == 0) {
             printAbout();
         }
-        else if(strcmp(rdbuf,"pause 4") == 0 ){
+        else if (strcmp(rdbuf, "pause 4") == 0) {
             proc_table[4].run_state = 0 ;
             ProcessManage();
         }
-        else if(strcmp(rdbuf,"pause 5") == 0 ){
+        else if (strcmp(rdbuf, "pause 5") == 0) {
             proc_table[5].run_state = 0 ;
             ProcessManage();
         }
-        else if(strcmp(rdbuf,"pause 6") == 0 ){
+        else if (strcmp(rdbuf, "pause 6") == 0) {
             proc_table[6].run_state = 0 ;
             ProcessManage();
         }
-        else if(strcmp(rdbuf,"kill 4") == 0 ){
+        else if (strcmp(rdbuf, "kill 4") == 0) {
 //            proc_table[4].p_flags = 1;
 //            ProcessManage();
             printf("cant kill this process!");
         }
-        else if(strcmp(rdbuf,"kill 5") == 0 ){
+        else if (strcmp(rdbuf, "kill 5") == 0){
             proc_table[5].p_flags = 1;
             ProcessManage();
         }
-        else if(strcmp(rdbuf,"kill 6") == 0 ){
+        else if (strcmp(rdbuf, "kill 6") == 0) {
             proc_table[6].p_flags = 1;
             ProcessManage();
         }
-        else if(strcmp(rdbuf,"resume 4") == 0 ){
+        else if (strcmp(rdbuf, "resume 4") == 0 ) {
             proc_table[4].run_state = 1 ;
             ProcessManage();
         }
-        else if(strcmp(rdbuf,"resume 5") == 0 ){
+        else if (strcmp(rdbuf, "resume 5") == 0 ) {
             proc_table[5].run_state = 1 ;
             ProcessManage();
         }
-        else if(strcmp(rdbuf,"resume 6") == 0 ){
+        else if (strcmp(rdbuf, "resume 6") == 0 ) {
             proc_table[6].run_state = 1 ;
             ProcessManage();
         }
-        else if(strcmp(rdbuf,"up 4") == 0 ){
+        else if (strcmp(rdbuf, "up 4") == 0 ) {
             proc_table[4].priority = proc_table[4].priority*2;
             ProcessManage();
         }
-        else if(strcmp(rdbuf,"up 5") == 0 ){
+        else if (strcmp(rdbuf, "up 5") == 0 ) {
             proc_table[5].priority = proc_table[5].priority*2;
             ProcessManage();
         }
-        else if(strcmp(rdbuf,"up 6") == 0 ){
+        else if (strcmp(rdbuf, "up 6") == 0 ) {
             proc_table[6].priority = proc_table[6].priority*2;
             ProcessManage();
         }
-        else if (strcmp(cmd, "touch") == 0){
-            if(arg1[0]!='/'){
-                addTwoString(temp,current_dirr,arg1);
-                memcpy(arg1,temp,512);                
+        else if (strcmp(cmd, "touch") == 0) {
+            if (arg1[0] != '/') {
+                addTwoString(temp,current_dirr, arg1);
+                memcpy(arg1, temp, 512);                
             }
 
             fd = open(arg1, O_CREAT | O_RDWR);
-            if (fd == -1){
+            if (fd == -1) {
                 printf("Failed to create file! Please check the filename!\n");
                 continue ;
             }
@@ -261,18 +263,18 @@ void shell(char *tty_name){
             printf("File created: %s (fd %d)\n", arg1, fd);
             close(fd);
         }
-        else if (strcmp(cmd, "cat") == 0){
-            if(arg1[0]!='/'){
-                addTwoString(temp,current_dirr,arg1);
-                memcpy(arg1,temp,512);                
+        else if (strcmp(cmd, "cat") == 0) {
+            if (arg1[0] != '/') {
+                addTwoString(temp,current_dirr, arg1);
+                memcpy(arg1, temp, 512);
             }
 
             fd = open(arg1, O_RDWR);
-            if (fd == -1){
+            if (fd == -1) {
                 printf("Failed to open file! Please check the filename!\n");
                 continue ;
             }
-            if (!verifyFilePass(arg1, fd_stdin)){
+            if (!verifyFilePass(arg1, fd_stdin)) {
                 printf("Authorization failed\n");
                 continue;
             }
@@ -280,73 +282,73 @@ void shell(char *tty_name){
             close(fd);
             printf("%s\n", buf);
         }
-        else if (strcmp(cmd, "vi") == 0){
-            if(arg1[0]==0){
+        else if (strcmp(cmd, "vi") == 0) {
+            if (arg1[0] == 0) {
                 printf("Failed to open file! Please input the filename!\n");
                 continue;
             }
-            if(arg1[0]!='/'){
-                addTwoString(temp,current_dirr,arg1);
-                memcpy(arg1,temp,512);                
+            if (arg1[0] != '/') {
+                addTwoString(temp, current_dirr, arg1);
+                memcpy(arg1, temp, 512);
             }
 
             fd = open(arg1, O_RDWR);
-            if (fd == -1){
+            if (fd == -1) {
                 printf("Please check the filename!\n");
                 continue ;
             }
-            if (!verifyFilePass(arg1, fd_stdin)){
+            if (!verifyFilePass(arg1, fd_stdin)) {
                 printf("Authorization failed\n");
                 continue;
             }
             int tail = read(fd_stdin, rdbuf, 512);
             rdbuf[tail] = 0;
 
-            write(fd, rdbuf, tail+1);
+            write(fd, rdbuf, tail + 1);
             close(fd);
         }
-        else if (strcmp(cmd, "rm") == 0){
+        else if (strcmp(cmd, "rm") == 0) {
 
-            if(arg1[0]!='/'){
-                addTwoString(temp,current_dirr,arg1);
-                memcpy(arg1,temp,512);                
+            if (arg1[0] != '/') {
+                addTwoString(temp, current_dirr, arg1);
+                memcpy(arg1, temp, 512);
             }
 
             int result;
             result = unlink(arg1);
-            if (result == 0){
+            if (result == 0) {
                 printf("File deleted!\n");
                 continue;
             }
-            else{
+            else {
                 printf("Failed to delete file! Please check the filename!\n");
                 continue;
             }
         }
-        else if (strcmp(cmd, "cp") == 0){
+        else if (strcmp(cmd, "cp") == 0) {
             //get the content of file
-            if(arg1[0]!='/'){
-                addTwoString(temp,current_dirr,arg1);
-                memcpy(arg1,temp,512);                
+            if (arg1[0] != '/') {
+                addTwoString(temp, current_dirr, arg1);
+                memcpy(arg1, temp, 512);
             }
             fd = open(arg1, O_RDWR);
-            if (fd == -1){
+            if (fd == -1) {
                 printf("File not exists! Please check the filename!\n");
                 continue ;
             }
             int tail = read(fd, buf, 1024);
             close(fd);
 
-            if(arg2[0]!='/'){
-                addTwoString(temp,current_dirr,arg2);
-                memcpy(arg2,temp,512);                
+            if (arg2[0] != '/') {
+                addTwoString(temp, current_dirr, arg2);
+                memcpy(arg2, temp, 512);
             }
             /*create the file*/
             fd = open(arg2, O_CREAT | O_RDWR);
-            if (fd == -1){
+            if (fd == -1) {
                 //file exist
             }
-            else{
+            else {
                 //file not exist or create file
                 char temp2[1024];
                 temp2[0] = 0;
@@ -355,18 +357,17 @@ void shell(char *tty_name){
             }
             //set file to value
             fd = open(arg2, O_RDWR);
-            write(fd, buf, tail+1);
+            write(fd, buf, tail + 1);
             close(fd);
         }
-        else if (strcmp(cmd, "mv") == 0){
-             if(arg1[0]!='/'){
-                addTwoString(temp,current_dirr,arg1);
-                memcpy(arg1,temp,512);                
+        else if (strcmp(cmd, "mv") == 0) {
+             if (arg1[0] != '/') {
+                addTwoString(temp, current_dirr, arg1);
+                memcpy(arg1, temp, 512);
             }
             //get the content of file first
             fd = open(arg1, O_RDWR);
-            if (fd == -1)
-            {
+            if (fd == -1) {
                 printf("File not exists! Please check the filename!\n");
                 continue ;
             }
@@ -374,13 +375,13 @@ void shell(char *tty_name){
             int tail = read(fd, buf, 1024);
             close(fd);
 
-            if(arg2[0]!='/'){
-                addTwoString(temp,current_dirr,arg2);
-                memcpy(arg2,temp,512);                
+            if (arg2[0] != '/') {
+                addTwoString(temp, current_dirr, arg2);
+                memcpy(arg2, temp, 512);
             }
             /*create the file*/
             fd = open(arg2, O_CREAT | O_RDWR);
-            if (fd == -1){
+            if (fd == -1) {
                 //file exist
             }
             else{
@@ -397,98 +398,95 @@ void shell(char *tty_name){
             // delete the file
             unlink(arg1);
         }   
-        else if (strcmp(cmd, "encrypt") == 0)
-        {
+        else if (strcmp(cmd, "encrypt") == 0) {
             fd = open(arg1, O_RDWR);
-            if (fd == -1)
-            {
+            if (fd == -1) {
                 printf("File not exists! Please check the filename!\n");
                 continue ;
             }
-            if (!verifyFilePass(arg1, fd_stdin))
-            {
+            if (!verifyFilePass(arg1, fd_stdin)) {
                 printf("Authorization failed\n");
                 continue;
             }
             doEncrypt(arg1, fd_stdin);
         }
-        else if (strcmp(cmd, "test") == 0)
-        {
+        else if (strcmp(cmd, "test") == 0) {
             doTest(arg1);
         }
-        else if (strcmp(cmd, "game") == 0){
+        else if (strcmp(cmd, "game") == 0) {
         	   game(fd_stdin);
         }
-        else if (strcmp(cmd, "mkdir") == 0){
-            i = j =0;
-            while(current_dirr[i]!=0){
+        else if (strcmp(cmd, "mkdir") == 0) {
+            i = j = 0;
+            while (current_dirr[i] != 0) {
                 arg2[j++] = current_dirr[i++];
             }
             i = 0;
             
-            while(arg1[i]!=0){
-                arg2[j++]=arg1[i++];
+            while (arg1[i] != 0) {
+                arg2[j++] = arg1[i++];
             }
-            arg2[j]=0;
+            arg2[j] = 0;
             printf("%s\n", arg2);
             fd = mkdir(arg2);            
         }
-        else if (strcmp(cmd, "cd") == 0){
-            if(strcmp(arg1, "..")==0){
+        else if (strcmp(cmd, "cd") == 0) {
+            if (strcmp(arg1, "..") == 0) {
                 memcpy(arg2, current_dirr, 512);
-                j =0;
-                int k=0;
-                int count =0;
-                while(arg2[k] !=0){
-                    if(arg2[k++]=='/'){
+                j = 0;
+                int k = 0;
+                int count = 0;
+                while (arg2[k] != 0) {
+                    if (arg2[k++] == '/') {
                         count++;
                     }
                 }
-                int index=0;
-                for(i=0;arg2[i]!=0;i++){
-                    if(arg2[i] == '/'){
+                int index = 0;
+                for (i = 0; arg2[i] != 0; i++) {
+                    if (arg2[i] == '/') {
                         index++;
                     }
-                    if(index < count-1){
+                    if (index < count - 1) {
                         arg1[j++] = arg2[i];
                     }
                 }
-                arg1[j++] ='/';
-                arg1[j]=0;
+                arg1[j++] = '/';
+                arg1[j] = 0;
             }
-            else if(arg1[0]==0){
-                arg1[0] ='/';
-                arg1[1]=0;
+            else if (arg1[0] == 0) {
+                arg1[0] = '/';
+                arg1[1] = 0;
             }
-            else{ // not absolute path from root
-                i = j =0;
-                while(current_dirr[i]!=0){
+            else { // not absolute path from root
+                i = j = 0;
+                while (current_dirr[i] != 0) {
                     arg2[j++] = current_dirr[i++];
                 }
                 i = 0;
-                while(arg1[i]!=0){
-                    arg2[j++]=arg1[i++];
+                while (arg1[i] != 0) {
+                    arg2[j++] = arg1[i++];
                 }
                 arg2[j++] = '/';
-                arg2[j]=0;
+                arg2[j] = 0;
                 memcpy(arg1, arg2, 512);
             }
             //printf("%s\n", arg1);
             fd = open(arg1, O_RDWR);
 
-            if(fd == -1){
+            if (fd == -1) {
                 printf("The path not exists! Please check the pathname!\n");
             }
-            else{
+            else {
                 memcpy(current_dirr, arg1, 512);
                 //printf("Change dir %s success!\n", current_dirr);
             }
         }
-        else if( strcmp(cmd, "snake")  == 0){
+        else if (strcmp(cmd, "snake") == 0) {
             snakeGame();
         }
-        else
+        else {
             printf("Command not found, please check!\n");
+        }
     }
 }
 
@@ -527,7 +525,7 @@ PUBLIC void panic(const char *fmt, ...) {
     int i;
     char buf[256];
     /* 4 is the size of fmt in the stack */
-    va_list arg = (va_list)((char*)&fmt + 4);
+    va_list arg = (va_list) ((char*) &fmt + 4);
     i = vsprintf(buf, fmt, arg);
     printl("%c !!panic!! %s", MAG_CH_PANIC, buf);
     /* should never arrive here */
@@ -537,7 +535,7 @@ PUBLIC void panic(const char *fmt, ...) {
 /*****************************************************************************
  *                                Custom Command
  *****************************************************************************/
-char* findpass(char *src){
+char* findpass(char *src) {
     char pass[128];
     int flag = 0;
     char *p1, *p2;
@@ -545,13 +543,12 @@ char* findpass(char *src){
     p1 = src;
     p2 = pass;
 
-    while (p1 && *p1 != ' ')
-    {
-        if (*p1 == ':')
+    while (p1 && (*p1 != ' ')) {
+        if (*p1 == ':') {
             flag = 1;
+        }
 
-        if (flag && *p1 != ':')
-        {
+        if (flag && (*p1 != ':')) {
             *p2 = *p1;
             p2++;
         }
@@ -562,28 +559,29 @@ char* findpass(char *src){
     return pass;
 }
 
-void clearArr(char *arr, int length){
+void clearArr(char *arr, int length) {
     int i;
-    for (i = 0; i < length; i++)
+    for (i = 0; i < length; i++) {
         arr[i] = 0;
+    }
 }
 
-void printAbout(){
+void printAbout() {
     clear(); 
-    if(current_console==0){
+    if(current_console == 0) {
         printf("=============================================================================\n");
         printf("                                  Simple OS 1.0                              \n");
         printf("                        Built from Hou Cui Cun on Aug 18, 2017               \n");
         printf("                          Compiled on Sep 18 2017 at 23:59:59                \n");
         printf("=============================================================================\n");
     }
-    else{
+    else {
     	printf("[TTY #%d]\n", current_console);
     }
 }
 
-void clear(){	
-    clear_screen(0,console_table[current_console].cursor);
+void clear() {	
+    clear_screen(0, console_table[current_console].cursor);
     console_table[current_console].crtc_start = console_table[current_console].orig;
     console_table[current_console].cursor = console_table[current_console].orig;    
 }
@@ -603,8 +601,9 @@ int verifyFilePass(char *path, int fd_stdin) {
 
     /*printl(pde->pass);*/
 
-    if (strcmp(pde->pass, "") == 0)
+    if (strcmp(pde->pass, "") == 0) {
         return 1;
+    }
 
     printl("Please input the file password: ");
     read(fd_stdin, pass, 128);
@@ -635,38 +634,42 @@ void doEncrypt(char *path, int fd_stdin) {
     memset(filename, 0, MAX_FILENAME_LEN);
     struct inode * dir_inode;
 
-    if (strip_path(filename, path, &dir_inode) != 0)
+    if (strip_path(filename, path, &dir_inode) != 0) {
         return 0;
+    }
 
-    if (filename[0] == 0)   /* path: "/" */
+    /* path: "/" */
+    if (filename[0] == 0) {
         return dir_inode->i_num;
+    }
     /**
      * Search the dir for the file.
      */
     int dir_blk0_nr = dir_inode->i_start_sect;
     int nr_dir_blks = (dir_inode->i_size + SECTOR_SIZE - 1) / SECTOR_SIZE;
-    int nr_dir_entries =
-    dir_inode->i_size / DIR_ENTRY_SIZE;
+    int nr_dir_entries = dir_inode->i_size / DIR_ENTRY_SIZE;
     int m = 0;
     struct dir_entry * pde;
     for (i = 0; i < nr_dir_blks; i++) {
         RD_SECT(dir_inode->i_dev, dir_blk0_nr + i);
         pde = (struct dir_entry *)fsbuf;
-        for (j = 0; j < SECTOR_SIZE / DIR_ENTRY_SIZE; j++,pde++)
-        {
-            if (memcmp(filename, pde->name, MAX_FILENAME_LEN) == 0)
-            {
+        for (j = 0; j < SECTOR_SIZE / DIR_ENTRY_SIZE; j++,pde++) {
+            if (memcmp(filename, pde->name, MAX_FILENAME_LEN) == 0) {
                 // delete the file
                 strcpy(pde->pass, pass);
                 WR_SECT(dir_inode->i_dev, dir_blk0_nr + i);
                 return;
                 /*return pde->inode_nr;*/
             }
-            if (++m > nr_dir_entries)
+            if (++m > nr_dir_entries) {
                 break;
+            }
         }
-        if (m > nr_dir_entries) /* all entries have been iterated */
+
+         /* all entries have been iterated */
+        if (m > nr_dir_entries) {
             break;
+        }
     }
 
 }
@@ -697,13 +700,12 @@ void help() {
     printf("=============================================================================\n");
 }
 
-void ProcessManage()
-{
+void ProcessManage() {
     int i;
     printf("=============================================================================\n");
     printf("         myID      |    name       |      priority    |     running        \n");
     printf("-----------------------------------------------------------------------------\n");
-    for ( i = 0 ; i < NR_TASKS + NR_PROCS ; ++i ) {
+    for (i = 0 ; i < NR_TASKS + NR_PROCS ; ++i) {
         printf("          %d             %s               %d                 %d\n",
                proc_table[i].pid, proc_table[i].name, proc_table[i].priority, proc_table[i].run_state);
     }
@@ -719,7 +721,7 @@ void ProcessManage()
 /*======================================================================*
                             welcome animation
  *======================================================================*/
-void animation(){
+void animation() {
     clear();
     printf("             OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
     printf("             O**********************O**********************O\n");
@@ -750,7 +752,7 @@ void animation(){
  *======================================================================*/
 unsigned int _seed2 = 0xDEADBEEF;
 
-void srand(unsigned int seed){
+void srand(unsigned int seed) {
 	_seed2 = seed;
 }
 
@@ -760,159 +762,166 @@ int rand() {
 
 	next *= 1103515245;
 	next += 12345;
-	result = (next / 65536) ;
+	result = (next / 65536);
 
 	next *= 1103515245;
 	next += 12345;
 	result <<= 10;
-	result ^= (next / 65536) ;
+	result ^= (next / 65536);
 
 	next *= 1103515245;
 	next += 12345;
 	result <<= 10;
-	result ^= (next / 65536) ;
+	result ^= (next / 65536);
 
 	_seed2 = next;
 
-	return result>0 ? result : -result;
+	return result > 0 ? result : -result;
 }
 
-void show_mat(int *mat,int *mat_state, int touch_x,int touch_y,int display){
+void show_mat(int *mat, int *mat_state, int touch_x, int touch_y, int display) {
 	int x, y;
-	for (x = 0; x < 10; x++){
+	for (x = 0; x < 10; x++) {
 		printf("  %d", x);
 	}
 	printf("\n");
-	for (x = 0; x < 10; x++){
+	for (x = 0; x < 10; x++) {
 		printf("---");
 	}
-	for (x = 0; x < 10; x++){
+	for (x = 0; x < 10; x++) {
 		printf("\n%d|", x);
-		for (y = 0; y < 10; y++){
-			if (mat_state[x * 10 + y] == 0){				
-					if (x == touch_x && y == touch_y)
+		for (y = 0; y < 10; y++) {
+			if (mat_state[x * 10 + y] == 0) {				
+					if (x == touch_x && y == touch_y) {
 						printf("*  ");
-					else if (display!=0 && mat[x * 10 + y] == 1)
+					}
+					else if ((display != 0) && (mat[x * 10 + y] == 1)) {
 						printf("#  ");
-					else
+					}
+					else {
 						printf("-  ");
+					}
 				
 			}
-			else if (mat_state[x * 10 + y] == -1){
+			else if (mat_state[x * 10 + y] == -1) {
 				printf("O  ");
 			}
-			else{
+			else {
 				printf("%d  ", mat_state[x * 10 + y]);
 			}
-			
 		}
 	}
 	printf("\n");
 }
 
-void init_game(int *mat, int mat_state[100]){
+void init_game(int *mat, int mat_state[100]) {
 	int sum = 0;
 	int x, y;
-	for (x = 0; x < 100; x++)
+	for (x = 0; x < 100; x++) {
 		mat[x] = mat_state[x] = 0;
-	while (sum < 15){
+	}
+	while (sum < 15) {
 		x = rand() % 10;
 		y = rand() % 10;
-		if (mat[x * 10 + y] == 0){
+		if (mat[x * 10 + y] == 0) {
 			sum++;
 			mat[x * 10 + y] = 1;
 		}
 	}
-	show_mat(mat,mat_state,-1,-1,0);
+	show_mat(mat, mat_state, -1, -1, 0);
 }
 
-int check(int x, int y, int *mat){
-	int i, j,now_x,now_y,result = 0;
-	for (i = -1; i <= 1; i++){
-		for (j = -1; j <= 1; j++){
-			if (i == 0 && j == 0)
+int check(int x, int y, int *mat) {
+	int i, j, now_x, now_y, result = 0;
+	for (i = -1; i <= 1; i++) {
+		for (j = -1; j <= 1; j++) {
+			if ((i == 0) && (j == 0)) {
 				continue;
+			}
 			now_x = x + i;
 			now_y = y + j;
-			if (now_x >= 0 && now_x < 10 && now_y >= 0 && now_y <= 9){
-				if (mat[now_x * 10 + now_y] == 1)
+			if ((now_x >= 0) && (now_x < 10) && (now_y >= 0) && (now_y <= 9)) {
+				if (mat[now_x * 10 + now_y] == 1) {
 					result++;
+				}
 			}
 		}
 	}
 	return result;
 }
 
-void dfs(int x, int y, int *mat, int *mat_state,int *left_coin){
-	int i, j, now_x, now_y,temp;
-	if (mat_state[x*10+y] != 0)
+void dfs(int x, int y, int *mat, int *mat_state, int *left_coin) {
+	int i, j, now_x, now_y, temp;
+	if (mat_state[x*10+y] != 0) {
 		return;
+	}
 	(*left_coin)--;
 	temp = check(x, y,mat);
-	if (temp != 0){
+	if (temp != 0) {
 		mat_state[x * 10 + y] = temp;
 	}
-	else{
+	else {
 		mat_state[x * 10 + y] = -1;
-		for (i = -1; i <= 1; i++){
-			for (j = -1; j <= 1; j++){
-				if (i == 0 && j == 0)
+		for (i = -1; i <= 1; i++) {
+			for (j = -1; j <= 1; j++) {
+				if ((i == 0) && (j == 0)) {
 					continue;
+				}
 				now_x = x + i;
 				now_y = y + j;
-				if (now_x >= 0 && now_x < 10 && now_y >= 0 && now_y <= 9){				
-					dfs(now_x, now_y,mat,mat_state,left_coin);
+				if ((now_x >= 0) && (now_x < 10) && (now_y >= 0) && (now_y <= 9)) {				
+					dfs(now_x, now_y, mat, mat_state, left_coin);
 				}
 			}
 		}
 	}
 }
 
-void game(int fd_stdin){
+void game(int fd_stdin) {
 	int mat[100] = { 0 };
 	int mat_state[100] = { 0 };
 	char keys[128];
-	int x, y, left_coin = 100,temp;
+	int x, y, left_coin = 100, temp;
 	int flag = 1;
 
-	while (flag == 1){
+	while (flag == 1) {
 		init_game(mat, mat_state);
 		left_coin = 100;
 		printf("-------------------------------------------\n\n");
 		printf("Input next x and y: ");
 
-		while (left_coin != 15){
-
-		clearArr(keys, 128);
-                int r = read(fd_stdin, keys, 128);
-                if(keys[0]>'9'||keys[0]<'0'||keys[1]!=' '||keys[2]>'9'||keys[2]<'0'||keys[3]!=0){
-                	printf("Please input again!\n");
-    				continue;
-            } 
-            x = keys[0]-'0';
-            y = keys[2]-'0';
-			if (x < 0 || x>9 || y < 0 || y>9){
+		while (left_coin != 15) {
+			clearArr(keys, 128);
+            int r = read(fd_stdin, keys, 128);
+            if((keys[0] > '9') || (keys[0] < '0') || (keys[1] != ' ') || (keys[2] > '9') || (keys[2] < '0') || (keys[3] != 0)) {
+              	printf("Please input again!\n");
+    			continue;
+    		}
+            x = keys[0] - '0';
+            y = keys[2] - '0';
+			if ((x < 0) || (x > 9) || (y < 0) || (y > 9)) {
 				printf("Please input again!\n");
 				continue;
 			}
 
-			if (mat[x * 10 + y] == 1){
+			if (mat[x * 10 + y] == 1) {
 				break;
 			}
-			else{
+			else {
 				dfs(x, y, mat, mat_state, &left_coin);
-				if (left_coin <= 15)
+				if (left_coin <= 15) {
 					break;
+				}
 				show_mat(mat, mat_state, -1, -1, 0);
 				printf("-------------------------------------------\n\n");
 				printf("Input next x and y: ");
 			}
 		}
-		if (mat[x * 10 + y] == 1){
+		if (mat[x * 10 + y] == 1) {
 			printf("\n\nFAIL!\n");
 			show_mat(mat, mat_state, x, y, 1);
 		}
-		else{
+		else {
 			printf("\n\nSUCCESS!\n");
 			show_mat(mat, mat_state, -1, -1, 1);
 		}
@@ -921,13 +930,12 @@ void game(int fd_stdin){
 		clearArr(keys, 128);
         int r = read(fd_stdin, keys, 128);
         //  printf("%s\n",keys);
-        if (keys[0]=='n' && keys[1]=='o' && keys[2]==0)
-        {
+        if ((keys[0] == 'n') && (keys[1] == 'o') && (keys[2] == 0)) {
         	flag = 0;
-        //	printf("%s\n",keys);
+        	//	printf("%s\n",keys);
             break;
         }
-	}	
+	}
 }
 
 
@@ -943,41 +951,49 @@ void game(int fd_stdin){
 PUBLIC void judgeInpt(u32 key) {
     char output[2] = {'\0', '\0'};
     output[0] = key & 0xFF;
-    if(output[0] == 'a') changeToLeft();
-    if(output[0] == 's') changeToDown();
-    if(output[0] == 'd') changeToRight();
-    if(output[0] == 'w') changeToUp();
+    if (output[0] == 'a') {
+    	changeToLeft();
+    }
+    if (output[0] == 's') {
+    	changeToDown();
+    }
+    if (output[0] == 'd') {
+    	changeToRight();
+    }
+    if (output[0] == 'w') {
+    	changeToUp();
+    }
 }
 
 int listenerStart = 0;
 
-struct Snake{   //every node of the snake 
+struct Snake {   //every node of the snake 
     int x, y;  
     int now;   //0,1,2,3 means left right up down   
-}Snake[15*35];  //Snake[0] is the head，and the other nodes are recorded in inverted order，eg: Snake[1] is the tail
+} Snake[15*35];  //Snake[0] is the head，and the other nodes are recorded in inverted order，eg: Snake[1] is the tail
 
 
 //change the direction of circle
-void changeToLeft(){
-    if(listenerStart == 1){
+void changeToLeft() {
+    if (listenerStart == 1) {
         Snake[0].now = 0;
         listenerStart = 0;
     }
 }
-void changeToDown(){
-    if(listenerStart == 1){
+void changeToDown() {
+    if (listenerStart == 1) {
         Snake[0].now = 3;
         listenerStart = 0;
     }
 }
-void changeToRight(){
-    if(listenerStart == 1){
+void changeToRight() {
+    if (listenerStart == 1) {
         Snake[0].now = 1;
         listenerStart = 0;
     }
 }
-void changeToUp(){
-    if(listenerStart == 1){
+void changeToUp() {
+    if (listenerStart == 1) {
         Snake[0].now = 2;
         listenerStart = 0;
     }
@@ -1014,45 +1030,47 @@ void sleep(float pauseTime);
 /**
  * enter the snake game
  */
-void snakeGame(){
+void snakeGame() {
     clear();
-    initGame();  
-    show(); 
+    initGame();
+    show();
 }
 /**
  * init game
  */
 void initGame() {
-    int i, j;  
+    int i, j;
     int headx = 0;
     int heady = 0;
     memset(Map, '.', sizeof(Map));   //init map with '.'
-    Map[headx][heady] = sHead;  
-    Snake[0].x = headx;  
-    Snake[0].y = heady;  
+    Map[headx][heady] = sHead;
+    Snake[0].x = headx;
+    Snake[0].y = heady;
     Snake[0].now = -1;
-    initFood();   //init target 
-    for(i = 0; i < mapH; i++){
-        for(j = 0; j < mapW; j++)  
-            printf("%c", Map[i][j]);  
-        printf("\n");  
-    } 
+    initFood();   //init target
+    for (i = 0; i < mapH; i++) {
+        for (j = 0; j < mapW; j++) {  
+            printf("%c", Map[i][j]);
+        }  
+        printf("\n");
+    }
     printf("press 'a''s''d''w' key and start the game\n");
     listenerStart = 1;
-    while(listenerStart);
+    while (listenerStart) {
+    }
 }
 
 /**
  * the food location
  */
-void initFood(){
+void initFood() {
     int fx, fy;
-    int tick;  
-    while(1){
+    int tick;
+    while (1) {
         tick = get_ticks();
-        fx = tick%mapH;
-        fy = tick%mapW;     
-        if(Map[fx][fy] == '.'){
+        fx = tick % mapH;
+        fy = tick % mapW;     
+        if (Map[fx][fy] == '.') {
             eat++;
             Map[fx][fy] = sFood;  
             break;  
@@ -1064,29 +1082,27 @@ void initFood(){
 /**
  * show game situation
  */
-void show(){
+void show() {
     int i, j; 
     printf("Load snake game ...");
-    while(1){
+    while (1) {
         listenerStart = 1;
-        if(eat < 5){
+        if (eat < 5) {
             sleep(2.0);
-        }else if(eat < 10){
+        } else if (eat < 10) {
             sleep(1.5);
-        }else{
+        } else {
             sleep(1.0);
         }
         move();  
-        if(overOrNot) 
-        {
+        if (overOrNot) {
             showGameOver();
             sleep(9);
             clear();
             help(); 
             break;  
         } 
-        if(eat == win)
-        {
+        if (eat == win) {
             showGameSuccess();
             sleep(9);
             clear();
@@ -1094,83 +1110,88 @@ void show(){
             break;
         }
         clear();
-        for(i = 0; i < mapH; i++)   
-        {   
+        for(i = 0; i < mapH; i++) {
             for(j = 0; j < mapW; j++)  
-            printf("%c", Map[i][j]);  
-            printf("\n");  
+            printf("%c", Map[i][j]);
+            printf("\n");
         }  
 
         printf("           Have fun!\n");
-        printf("       You have ate:%d\n",eat);
+        printf("       You have ate:%d\n", eat);
     }  
 }
 /**
  * snake move function
  */
-void move(){
-    int i, x, y;  
+void move() {
+    int i, x, y;
     int t = sLength;
-    x = Snake[0].x;  
-    y = Snake[0].y;  
-    Snake[0].x = Snake[0].x + dx[Snake[0].now]; 
-    Snake[0].y = Snake[0].y + dy[Snake[0].now];  
+    x = Snake[0].x;
+    y = Snake[0].y;
+    Snake[0].x = Snake[0].x + dx[Snake[0].now];
+    Snake[0].y = Snake[0].y + dy[Snake[0].now];
 
-    Map[x][y] = '.'; 
-    checkBorder(); 
-    checkHead(x, y);   
-    if(sLength == t)  //did not eat
-        for(i = 1; i < sLength; i++){
-            if(i == 1)   //tail  
-                Map[Snake[i].x][Snake[i].y] = '.';  
+    Map[x][y] = '.';
+    checkBorder();
+    checkHead(x, y);
+    // did not eat
+    if (sLength == t) {
+        for (i = 1; i < sLength; i++) {
+        	//tail
+            if (i == 1) {
+                Map[Snake[i].x][Snake[i].y] = '.';
+            }
      
-            if(i == sLength-1)  //the node after the head 
-            {  
-                Snake[i].x = x;  
-                Snake[i].y = y;  
-                Snake[i].now = Snake[0].now;  
-            }  
-            else 
-            {  
-                Snake[i].x = Snake[i+1].x;  
-                Snake[i].y = Snake[i+1].y;  
-                Snake[i].now = Snake[i+1].now;  
-            }  
-            Map[Snake[i].x][Snake[i].y] = sBody;  
-        }  
+       		//the node after the head 
+            if (i == sLength - 1) {
+                Snake[i].x = x;
+                Snake[i].y = y;
+                Snake[i].now = Snake[0].now;
+            }
+            else {
+                Snake[i].x = Snake[i+1].x;
+                Snake[i].y = Snake[i+1].y;
+                Snake[i].now = Snake[i+1].now;
+            }
+            Map[Snake[i].x][Snake[i].y] = sBody;
+        }
+    }
 }
 /**
  *
  */
-void checkBorder(){
-    if(Snake[0].x < 0 || Snake[0].x >= mapH || Snake[0].y < 0 || Snake[0].y >= mapW)  
-        overOrNot = 1;  
+void checkBorder() {
+    if ((Snake[0].x < 0) || (Snake[0].x >= mapH) || (Snake[0].y < 0) || (Snake[0].y >= mapW)) {  
+        overOrNot = 1;
+    }
 }
 /**
  *
  * @param x
  * @param y
  */
-void checkHead(int x, int y){
-    if(Map[Snake[0].x][Snake[0].y] == '.')
-        Map[Snake[0].x][Snake[0].y] = sHead ;  
+void checkHead(int x, int y) {
+    if (Map[Snake[0].x][Snake[0].y] == '.') {
+        Map[Snake[0].x][Snake[0].y] = sHead;
+    }
     else if(Map[Snake[0].x][Snake[0].y] == sFood) {
-        Map[Snake[0].x][Snake[0].y] = sHead ;    
-        Snake[sLength].x = x;                //new node
-        Snake[sLength].y = y;  
-        Snake[sLength].now = Snake[0].now;  
-        Map[Snake[sLength].x][Snake[sLength].y] = sBody;   
-        sLength++;  
-        initFood();  
-    }  
-    else{ 
-        overOrNot = 1; 
+        Map[Snake[0].x][Snake[0].y] = sHead ;
+        //new node
+        Snake[sLength].x = x;
+        Snake[sLength].y = y;
+        Snake[sLength].now = Snake[0].now;
+        Map[Snake[sLength].x][Snake[sLength].y] = sBody;
+        sLength++;
+        initFood();
+    }
+    else {
+        overOrNot = 1;
     }
 }
 /**
  *
  */
-void showGameOver(){
+void showGameOver() {
     printf("=======================================================================\n");
     printf("==============================Game Over================================\n");
     printf("=======================will exit in 3 seconds...=======================\n");
@@ -1188,8 +1209,8 @@ void showGameSuccess(){
  *
  * @param pauseTime
  */
-void sleep(float pauseTime){
+void sleep(float pauseTime) {
     int i = 0;
-    for(i=0;i<pauseTime*1000000;i++){
+    for (i = 0; i < pauseTime * 1000000; i++) {
     }
 }
