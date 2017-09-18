@@ -568,7 +568,7 @@ void clearArr(char *arr, int length) {
 
 void printAbout() {
     clear(); 
-    if(current_console == 0) {
+    if (current_console == 0) {
         printf("=============================================================================\n");
         printf("                                  Simple OS 1.0                              \n");
         printf("                        Built from Hou Cui Cun on Aug 18, 2017               \n");
@@ -671,7 +671,6 @@ void doEncrypt(char *path, int fd_stdin) {
             break;
         }
     }
-
 }
 
 
@@ -723,26 +722,152 @@ void ProcessManage() {
  *======================================================================*/
 void animation() {
     clear();
-    printf("             OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
-    printf("             O**********************O**********************O\n");
-    printf("             O*********OOOO*********O*********OOOO*OO******O\n");
-    printf("             O*******OOOOOOOO*******O*******OOOOOOOOO******O\n");
-    printf("             O******OOOO**OOOO******O*******OOO**OOOO******O\n");
-    printf("             O*****OOOO****OOOO*****O******OOO****OOO******O\n");
-    printf("             O****OOOO******OOOO****O******OOOO****OO******O\n");
-    printf("             O****OOO*******OOOO****O*******OOOO***********O\n");
-    printf("             O****OOO*******OOOO****O*******OOOOOO*********O\n");
-    printf("             O****OOO********OOO****O********OOOOOOO*******O\n");
-    printf("             O****OOO********OOO****O*********OOOOOOO******O\n");
-    printf("             O****OOO*******OOOO****O***********OOOOO******O\n");
-    printf("             O****OOO*******OOOO****O******OO****OOOOO*****O\n");
-    printf("             O****OOOO******OOOO****O******OO*****OOOO*****O\n");
-    printf("             O*****OOOO****OOOO*****O******OOO****OOO******O\n");
-    printf("             O******OOOOOOOOOO******O******OOOOOOOOOO******O\n");
-    printf("             O*******OOOOOOOO*******O******OOOOOOOOO*******O\n");
-    printf("             O**********************O**********************O\n");
-    printf("             OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
-    milli_delay(40000);
+    printf("                                                                 \n");
+    printf("                                                                 \n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 OO\n");
+    printf("                                                                 \n");
+    printf("                                                                 \n");
+
+    milli_delay(3000);
+    clear();
+    printf("                                                         \n");
+    printf("                                                         \n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OOOOOO\n");
+    printf("                                                         OOOOOO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         OO\n");
+    printf("                                                         \n");
+    printf("                                                         \n");
+    milli_delay(3000);
+
+    clear();
+    printf("                                                 \n");
+    printf("                                                 \n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OOOOOOOOOO\n");
+    printf("                                                 OOOOOOOOOO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 OO      OO\n");
+    printf("                                                 \n");
+    printf("                                                 \n");
+    milli_delay(3000);
+
+    clear();
+    printf("                                         \n");
+    printf("                                         \n");
+    printf("                                         OO      OO   OOO\n");
+    printf("                                         OO      OO  OOOO\n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OOOOOOOOOO  OOOO\n");
+    printf("                                         OOOOOOOOOO  OOOO\n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OO      OO  OO  \n");
+    printf("                                         OO      OO   OOO\n");
+    printf("                                         \n");
+    printf("                                         \n");
+    milli_delay(3000);
+    clear();
+    printf("                                  \n");
+    printf("                                  \n");
+    printf("                                  OO      OO   OOOOOO \n");
+    printf("                                  OO      OO  OOOOOOOO\n");
+    printf("                                  OO      OO  OO    OO\n");
+    printf("                                  OO      OO  OO    OO\n");
+    printf("                                  OO      OO  OO    OO\n");
+    printf("                                  OOOOOOOOOO  OOOOOOOO\n");
+    printf("                                  OOOOOOOOOO  OOOOOOOO\n");
+    printf("                                  OO      OO  OO  \n");
+    printf("                                  OO      OO  OO  \n");
+    printf("                                  OO      OO  OO  \n");
+    printf("                                  OO      OO  OOOOOOOO\n");
+    printf("                                  OO      OO   OOOOOO \n");
+    printf("                                  \n");
+    printf("                                  \n");
+    milli_delay(3000);
+    clear();
+    printf("                          \n");
+    printf("                          \n");
+    printf("                          OO      OO   OOOOOO   OO\n");
+    printf("                          OO      OO  OOOOOOOO  OO\n");
+    printf("                          OO      OO  OO    OO  OO\n");
+    printf("                          OO      OO  OO    OO  OO\n");
+    printf("                          OO      OO  OO    OO  OO\n");
+    printf("                          OOOOOOOOOO  OOOOOOOO  OO\n");
+    printf("                          OOOOOOOOOO  OOOOOOOO  OO\n");
+    printf("                          OO      OO  OO        OO\n");
+    printf("                          OO      OO  OO        OO\n");
+    printf("                          OO      OO  OO        OO\n");
+    printf("                          OO      OO  OOOOOOOO  OOOOOOOO\n");
+    printf("                          OO      OO   OOOOOO   OOOOOOOO\n");
+    printf("                          \n");
+    printf("                          \n");
+    milli_delay(3000);
+    clear();
+    printf("                 \n");
+    printf("                 \n");
+    printf("                 OO      OO   OOOOOO   OO        OO\n");
+    printf("                 OO      OO  OOOOOOOO  OO        OO\n");
+    printf("                 OO      OO  OO    OO  OO        OO\n");
+    printf("                 OO      OO  OO    OO  OO        OO\n");
+    printf("                 OO      OO  OO    OO  OO        OO\n");
+    printf("                 OOOOOOOOOO  OOOOOOOO  OO        OO\n");
+    printf("                 OOOOOOOOOO  OOOOOOOO  OO        OO\n");
+    printf("                 OO      OO  OO        OO        OO\n");
+    printf("                 OO      OO  OO        OO        OO\n");
+    printf("                 OO      OO  OO        OO        OO\n");
+    printf("                 OO      OO  OOOOOOOO  OOOOOOOO  OOOOOOOO\n");
+    printf("                 OO      OO   OOOOOO   OOOOOOOO  OOOOOOOO\n");
+    printf("                 \n");
+    printf("                 \n");
+    milli_delay(3000);
+    clear();
+    printf("       \n");
+    printf("       \n");
+    printf("       OO      OO   OOOOOO   OO        OO         OOOOOO\n");
+    printf("       OO      OO  OOOOOOOO  OO        OO        OOOOOOOO\n");
+    printf("       OO      OO  OO    OO  OO        OO        OO    OO\n");
+    printf("       OO      OO  OO    OO  OO        OO        OO    OO\n");
+    printf("       OO      OO  OO    OO  OO        OO        OO    OO\n");
+    printf("       OOOOOOOOOO  OOOOOOOO  OO        OO        OO    OO\n");
+    printf("       OOOOOOOOOO  OOOOOOOO  OO        OO        OO    OO\n");
+    printf("       OO      OO  OO        OO        OO        OO    OO\n");
+    printf("       OO      OO  OO        OO        OO        OO    OO\n");
+    printf("       OO      OO  OO        OO        OO        OO    OO\n");
+    printf("       OO      OO  OOOOOOOO  OOOOOOOO  OOOOOOOO  OOOOOOOO\n");
+    printf("       OO      OO   OOOOOO   OOOOOOOO  OOOOOOOO   OOOOOO\n");
+    printf("       \n");
+    printf("       \n");
+    milli_delay(8000);
     clear();
 }
 
