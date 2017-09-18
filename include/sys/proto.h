@@ -85,13 +85,15 @@ PUBLIC int		do_rdwt();
 
 /* fs/link.c */
 PUBLIC int		do_unlink();
+PUBLIC int      	do_unlinkfolder();
 
 /* fs/misc.c */
 PUBLIC int		do_stat();
 PUBLIC int		strip_path(char * filename, const char * pathname,
 				   struct inode** ppinode);
 PUBLIC int		search_file(char * path);
-
+PUBLIC int              find_all_path(char ** filename, char * pathname, int *len);
+PUBLIC int              isNull(char * filename, char * pathname);
 /* fs/disklog.c */
 PUBLIC int		do_disklog();
 PUBLIC int		disklog(char * logstr); /* for debug */

@@ -154,34 +154,17 @@ PUBLIC int search_file(char * path)
 PUBLIC int strip_path(char * filename, const char * pathname,
               struct inode** ppinode)
 {
-    //printl("strip_path,pathname:%s\n",pathname);
     const char * s = pathname;
     char * t = filename;
-
     if (s == 0)
         return -1;
 
     if (*s == '/')
         s++;
-
-   /* while (*s) {        
-        if (*s == '/')
-            return -1;
-        *t++ = *s++;
-        if (t - filename >= MAX_FILENAME_LEN)
-            break;
-    }
-    *t = 0;
-
-    *ppinode = root_inode;*/
-
-      struct inode *pinode_now = root_inode, *ptemp;
+    struct inode *pinode_now = root_inode, *ptemp;
     struct dir_entry * pde;
     int dir_blk0_nr, nr_dir_blks, nr_dir_entries, m;
     int i, j;
-
-    //printl("root size:%d\n", pinode_now->i_size);
-
     while(*s){
         if(*s == '/'){
             /*if(*(++s)==0)
@@ -190,8 +173,7 @@ PUBLIC int strip_path(char * filename, const char * pathname,
             dir_blk0_nr = pinode_now->i_start_sect;
             nr_dir_blks = (pinode_now->i_size + SECTOR_SIZE - 1) / SECTOR_SIZE;
             nr_dir_entries =
-              pinode_now->i_size / DIR_ENTRY_SIZE; 
-
+            pinode_now->i_size / DIR_ENTRY_SIZE; 
             m = 0;
             pde = 0;
             *t = 0;
@@ -201,23 +183,20 @@ PUBLIC int strip_path(char * filename, const char * pathname,
                 pde = (struct dir_entry *)fsbuf;
                 //printl("%d  %d\n",SECTOR_SIZE , DIR_ENTRY_SIZE );
                 for (j = 0; j < SECTOR_SIZE / DIR_ENTRY_SIZE; j++,pde++) {
-                    //printl("pde->name:%s\n", pde->name);
                     if (strcmp(filename, pde->name) == 0){
-                        ptemp = get_inode(pinode_now->i_dev, pde->inode_nr);
-                        //printl("out\n");
-                        if(ptemp->i_mode == I_DIRECTORY){
-                           //printl("in\n");
-                            pinode_now = ptemp;
-                            flag = 1;
-                            break;
-                        }
+                          ptemp = get_inode(pinode_now->i_dev, pde->inode_nr);
+                         if(ptemp->i_mode == I_DIRECTORY){
+                                  pinode_now = ptemp;
+                                  flag = 1;
+                                   break;
+                         }
                         //return pde->inode_nr;
                     }
                     if (++m > nr_dir_entries)
                         return -1;
                 }
                 if (m > nr_dir_entries || flag==0) {
-                   // printl("flag==0\n");
+                    // printl("flag==0\n");
                     return -1;
                 }
             }
@@ -225,7 +204,6 @@ PUBLIC int strip_path(char * filename, const char * pathname,
                 return -1;
             }
             t = filename;
-
             s++;
         }
         else{
@@ -234,10 +212,98 @@ PUBLIC int strip_path(char * filename, const char * pathname,
                 break;
         }
     }
-
     *t = 0;
     *ppinode = pinode_now;
   //  printl("size:%d\n",pinode_now->i_size);
     return 0;
 }
+PUBLIC int isNull(char * filename, char * pathname){
+    int i, j;
+    struct inode * dir_inode;
+    const char *pathtmp = pathname;
+    int l=0;
+    char path[30];
+    while(*pathtmp){
+        path[l++] = *pathtmp++;
+    }
+    path[l++] = '/';
+    path[l] = 0;
+    strip_path(filename, path, &dir_inode);
+    int dir_blk0_nr = dir_inode->i_start_sect;
+    int nr_dir_blks = (dir_inode->i_size + SECTOR_SIZE - 1) / SECTOR_SIZE;
+    int nr_dir_entries = dir_inode->i_size / DIR_ENTRY_SIZE;
+    int m = 0;
 
+    struct dir_entry * pde;
+    for (i = 0; i < nr_dir_blks; i++){
+        RD_SECT(dir_inode->i_dev, dir_blk0_nr + i);
+        pde = (struct dir_entry *)fsbuf;
+        for (j = 0; j < SECTOR_SIZE / DIR_ENTRY_SIZE; j++, pde++){
+                /*struct inode *n = find_inode(pde->inode_nr);*/
+                if(strlen(pde->name)>0){
+                     return 1;
+                }
+        }
+    }
+    return 0;
+}
+
+PUBLIC int find_all_path(char ** filename, char * pathname, int *len)
+{
+    int i, j;
+    struct inode * dir_inode;
+    const char *tmp = pathname;
+    const char *pathtmp = pathname;
+    char fn[12];
+    int l=0;
+    char path[30];
+    while(*pathtmp){
+        path[l++] = *pathtmp++;
+    }
+    path[l++] = '/';
+    path[l] = 0;
+
+    l = 0;
+    while(*tmp){
+        if(*tmp != '/'){
+            fn[l++] = *tmp++;
+        }else{
+            tmp++;
+            l = 0;
+        }
+    }
+    fn[l] = '/';
+
+    int k = *len + 1;
+    filename[k] = pathname;
+
+    strip_path(fn, path, &dir_inode);
+    int dir_blk0_nr = dir_inode->i_start_sect;
+    int nr_dir_blks = (dir_inode->i_size + SECTOR_SIZE - 1) / SECTOR_SIZE;
+    int nr_dir_entries = dir_inode->i_size / DIR_ENTRY_SIZE;
+    int m = 0;
+    struct dir_entry * pde;
+    for (i = 0; i < nr_dir_blks; i++){
+        RD_SECT(dir_inode->i_dev, dir_blk0_nr + i);
+        pde = (struct dir_entry *)fsbuf;
+        for (j = 0; j < SECTOR_SIZE / DIR_ENTRY_SIZE; j++, pde++){
+                /*struct inode *n = find_inode(pde->inode_nr);*/
+                if(strlen(pde->name)){
+                    int index = *len + 1;
+                    char dir_name[30];
+                    char *t = pathname;
+                    int _len = 0;
+                    while(*t){
+                        dir_name[_len++] = *t++;
+                    }
+                    dir_name[_len++] = '/';
+                    dir_name[_len] = 0;
+                    strcat(dir_name,  pde->name);
+                    printl("pde->name : %s    dir_name: %s\n", pde->name, dir_name);
+                    filename[index] = dir_name;
+                    find_all_path(filename, dir_name, &index);
+                }
+        }
+    }
+    return 0;
+}

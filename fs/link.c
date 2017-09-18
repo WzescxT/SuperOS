@@ -65,11 +65,24 @@ PUBLIC int do_unlink()
 	struct inode * pin = get_inode(dir_inode->i_dev, inode_nr);
 
 	//printl("%d %d %d %d %s %d %d\n",pin->i_dev, pin->i_mode, pin->i_start_sect,pin->i_size, pathname,inode_nr,SECTOR_SIZE);
-	if (pin->i_mode != I_REGULAR) { /* can only remove regular files */
-		printl("cannot remove file %s, because "
-		       "it is not a regular file.\n",
-		       pathname);
-		return -1;
+	// if (pin->i_mode != I_REGULAR) { /* can only remove regular files */
+	// 	printl("cannot remove file %s, because "
+	// 	       "it is not a regular file.\n",
+	// 	       pathname);
+	// 	return -1;
+	// }
+	//if the file is floder
+	if(pin->i_mode != I_REGULAR){
+		//char * filenames[30];
+		//int len = 0;
+		// check the folder is null
+		if(isNull(filename, pathname)){
+			printl("cannot remove the folder %s, because "
+	 	       "it is not null.\n",
+		        pathname);
+			return -1;
+		}
+		pin->i_cnt = 1;
 	}
 
 	if (pin->i_cnt > 1) {	/* the file was opened */
@@ -196,7 +209,6 @@ PUBLIC int do_unlink()
 			if (pde->inode_nr != INVALID_INODE)
 				dir_size += DIR_ENTRY_SIZE;
 		}
-
 		if (m > nr_dir_entries || /* all entries have been iterated OR */
 		    flg) /* file is found */
 			break;
@@ -206,6 +218,5 @@ PUBLIC int do_unlink()
 		dir_inode->i_size = dir_size;
 		sync_inode(dir_inode);
 	}
-
 	return 0;
 }

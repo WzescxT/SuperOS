@@ -20,5 +20,5 @@ PUBLIC  char*   strstr(char * s1, const char *s2);
  * a `physical copy' will be as same as a common copy, so does `phys_set'.
  */
 #define	phys_copy	memcpy
-#define	phys_set	memset
+#define	phys_set	 memset
 

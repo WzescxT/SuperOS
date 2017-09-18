@@ -228,9 +228,7 @@ PUBLIC int do_close()
 
 PUBLIC int do_ls()
 {
-
     char pathname[MAX_PATH];
-
     /* get parameters from the message */
     int flags = fs_msg.FLAGS;   /* access mode */
     int name_len = fs_msg.NAME_LEN; /* length of filename */
@@ -260,16 +258,20 @@ PUBLIC int do_ls()
         pde = (struct dir_entry *)fsbuf;
         for (j = 0; j < SECTOR_SIZE / DIR_ENTRY_SIZE; j++, pde++){
             /*struct inode *n = find_inode(pde->inode_nr);*/
-             printl("%s", pde->name);
-            for(int l=strlen(pde->name); l < 15; l++){
-                printl(" ");
-            }
-            if(m % 4 == 3) {
-                printl("\n");
-            }
-            if (++m >= nr_dir_entries){
-                break;
-            }
+            if(strlen(pde->name) == 0){
+                    //
+            }else{
+                    printl("%s", pde->name);
+                    for(int l=strlen(pde->name); l < 15; l++){
+                        printl(" ");
+                    }
+                    if(m % 4 == 3) {
+                        printl("\n");
+                    }
+                    if (++m >= nr_dir_entries){
+                        break;
+                    }
+               }
         }
         if(m%4 != 0){
             printl("\n");
