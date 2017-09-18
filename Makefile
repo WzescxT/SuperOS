@@ -1,8 +1,8 @@
 #########################
-# Makefile for Orange'S #
+# Makefile for SuperOS  #
 #########################
 
-# Entry point of Orange'S
+# Entry point of SuperOS
 # It must have the same value with 'KernelEntryPointPhyAddr' in load.inc!
 ENTRYPOINT	= 0x1000
 
@@ -178,4 +178,3 @@ fs/link.o: fs/link.c
 
 fs/disklog.o: fs/disklog.c
 	$(CC) $(CFLAGS) -o $@ $<
-
