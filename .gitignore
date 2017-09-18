@@ -2,4 +2,5 @@
 *.bin
 *.out
 *.map
-*.img
+80m.img
+*.tar
