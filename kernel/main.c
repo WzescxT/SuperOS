@@ -307,11 +307,8 @@ void shell(char *tty_name){
         }
         else if (strcmp(cmd, "rm") == 0){
             if(strcmp(arg1, "-R") == 0){
-                if(arg1[0]!='/'){
-                    addTwoString(temp, current_dirr, arg1);
-                    memcpy(arg1, temp, 512);                
-                }
                 char* files[30];
+                files[0] = 0;
                 int len = 0;
                 if(strlen(arg2) == 0){
                     printl("input error!");
@@ -321,17 +318,21 @@ void shell(char *tty_name){
                     addTwoString(temp,current_dirr,arg2);
                     memcpy(arg2,temp,512);                
                 }
+                //printl("%s %s\n", arg1, arg2);
                 find_all_path(files, arg2, &len);
+                //printl("%d\n", len);
                 int index = 0;
                 while(files[index]){
-                    int r;
-                    r = unlink(files[index++]);
+                    int r = 0;
+                    //printl("%s\n", files[index]);
+                    //r = unlink(files[index++]);
                     if (r == 0){
-                        printf("File deleted!\n");
+                        printf("%s File deleted!\n",files[index]);
                     }
                     else{
                         printf("Failed to delete file! Please check the filename!\n");
                     }
+                    index++;
                 }
                 continue;
             }
@@ -343,7 +344,7 @@ void shell(char *tty_name){
             int result;
             result = unlink(arg1);
             if (result == 0){
-                printf("File deleted!\n");
+                printf("%s File deleted!\n",arg1);
                 continue;
             }
             else{

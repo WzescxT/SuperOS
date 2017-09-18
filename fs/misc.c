@@ -288,22 +288,25 @@ PUBLIC int find_all_path(char ** filename, char * pathname, int *len)
         pde = (struct dir_entry *)fsbuf;
         for (j = 0; j < SECTOR_SIZE / DIR_ENTRY_SIZE; j++, pde++){
                 /*struct inode *n = find_inode(pde->inode_nr);*/
-                if(strlen(pde->name)){
-                    int index = *len + 1;
-                    char dir_name[30];
-                    char *t = pathname;
-                    int _len = 0;
-                    while(*t){
-                        dir_name[_len++] = *t++;
-                    }
-                    dir_name[_len++] = '/';
-                    dir_name[_len] = 0;
-                    strcat(dir_name,  pde->name);
-                    printl("pde->name : %s    dir_name: %s\n", pde->name, dir_name);
-                    filename[index] = dir_name;
-                    find_all_path(filename, dir_name, &index);
+            int index = *len;
+            if(strlen(pde->name)){
+                char dir_name[30];
+                char *t = pathname;
+                int _len = 0;
+                while(*t){
+                    dir_name[_len++] = *t++;
                 }
+                dir_name[_len++] = '/';
+                dir_name[_len] = 0;
+                strcat(dir_name, pde->name);
+                filename[index] = dir_name;
+                //printl("pde->name : %s    dir_name: %s %d filename[%d]:%s\n", pde->name, dir_name, index,index,filename[index]);
+                index++;
+                //find_all_path(filename, dir_name, &index); 
+            }   
+            *len = index;
         }
+        filename[*len] = 0;
     }
     return 0;
 }
