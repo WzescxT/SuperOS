@@ -6,6 +6,7 @@
 #include "type.h"
 #include "stdio.h"
 #include "const.h"
+#include "keyboard.h"
 #include "protect.h"
 #include "string.h"
 #include "fs.h"
@@ -305,35 +306,47 @@ void shell(char *tty_name){
             write(fd, rdbuf, tail+1);
             close(fd);
         }
-        else if (strcmp(cmd, "rm") == 0){
-            if(strcmp(arg1, "-R") == 0){
-                char* files[30];
+        else if (strcmp(cmd, "rm") == 0) {
+            if ((strcmp(arg1, "-r") == 0) || (strcmp(arg1, "-R") == 0)) {
+                char files[512] = "";
                 files[0] = 0;
                 int len = 0;
-                if(strlen(arg2) == 0){
+                if (strlen(arg2) == 0) {
                     printl("input error!");
                     continue;
                 }
-                if(arg2[0]!='/'){
-                    addTwoString(temp,current_dirr,arg2);
-                    memcpy(arg2,temp,512);                
+                if (arg2[0] != '/') {
+                    addTwoString(temp, current_dirr, arg2);
+                    memcpy(arg2, temp, 512);
                 }
                 //printl("%s %s\n", arg1, arg2);
                 find_all_path(files, arg2, &len);
+
                 //printl("%d\n", len);
+                
+                // Unlink all the paths in the array files
                 int index = 0;
-                while(files[index]){
-                    int r = 0;
-                    //printl("%s\n", files[index]);
-                    //r = unlink(files[index++]);
-                    if (r == 0){
-                        printf("%s File deleted!\n",files[index]);
+                char current_path[32];
+                char current_char = 0;
+                char path_index = 0;
+                while (current_char = files[index]) {
+                    if (current_char != ' ') {
+                        current_path[path_index] = current_char;
+                        path_index++;
+                    } else {
+                        current_path[path_index] = 0;
+                        path_index = 0;
+
+                        // Unlink the current path or file
+                        unlink(current_path);
                     }
-                    else{
-                        printf("Failed to delete file! Please check the filename!\n");
-                    }
+
                     index++;
                 }
+
+                // Unlink the current directory
+                unlink(arg2);
+                
                 continue;
             }
             if(arg1[0]!='/'){
@@ -748,7 +761,7 @@ void ProcessManage()
 /*======================================================================*
                             welcome animation
  *======================================================================*/
-void animation(){
+void animation() {
     clear();
     printf("             OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
     printf("             O**********************O**********************O\n");
@@ -769,7 +782,7 @@ void animation(){
     printf("             O*******OOOOOOOO*******O******OOOOOOOOO*******O\n");
     printf("             O**********************O**********************O\n");
     printf("             OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
-    milli_delay(40000);
+    milli_delay(20000);
     clear();
 }
 
@@ -971,11 +984,13 @@ void game(int fd_stdin){
  */
 PUBLIC void judgeInpt(u32 key) {
     char output[2] = {'\0', '\0'};
-    output[0] = key & 0xFF;
-    if(output[0] == 'a') changeToLeft();
-    if(output[0] == 's') changeToDown();
-    if(output[0] == 'd') changeToRight();
-    if(output[0] == 'w') changeToUp();
+    if (!(key & FLAG_EXT)) {
+        output[0] = key & 0xFF;
+        if(output[0] == 'a') changeToLeft();
+        if(output[0] == 's') changeToDown();
+        if(output[0] == 'd') changeToRight();
+        if(output[0] == 'w') changeToUp();
+    }
 }
 
 int listenerStart = 0;
@@ -1039,7 +1054,6 @@ void checkHead(int x, int y);
 void action();
 void showGameSuccess();
 void showGameSuccess();
-void sleep(float pauseTime);
 /**
  * enter the snake game
  */
@@ -1053,8 +1067,8 @@ void snakeGame(){
  */
 void initGame() {
     int i, j;  
-    int headx = 0;
-    int heady = 0;
+    int headx = 5;
+    int heady = 10;
     memset(Map, '.', sizeof(Map));   //init map with '.'
     Map[headx][heady] = sHead;  
     Snake[0].x = headx;  
@@ -1098,28 +1112,27 @@ void show(){
     printf("Load snake game ...");
     while(1){
         listenerStart = 1;
+
         if(eat < 5){
-            sleep(2.0);
+            milli_delay(8000);
         }else if(eat < 10){
-            sleep(1.5);
+            milli_delay(6000);
         }else{
-            sleep(1.0);
+            milli_delay(5000);
         }
         move();  
         if(overOrNot) 
         {
             showGameOver();
-            sleep(9);
+            milli_delay(50000);
             clear();
-            help(); 
             break;  
         } 
         if(eat == win)
         {
             showGameSuccess();
-            sleep(9);
+            milli_delay(50000);
             clear();
-            help(); 
             break;
         }
         clear();
@@ -1172,8 +1185,11 @@ void move(){
  *
  */
 void checkBorder(){
-    if(Snake[0].x < 0 || Snake[0].x >= mapH || Snake[0].y < 0 || Snake[0].y >= mapW)  
+    if(Snake[0].x < 0 || Snake[0].x >= mapH || Snake[0].y < 0 || Snake[0].y >= mapW){
+        printl("game over!");
         overOrNot = 1;  
+    }
+    
 }
 /**
  *
@@ -1212,13 +1228,4 @@ void showGameSuccess(){
     printf("=======================================================================\n");
     printf("============================Congratulation!============================\n");
     printf("=======================will exit in 3 seconds...=======================\n");
-}
-/**
- *
- * @param pauseTime
- */
-void sleep(float pauseTime){
-    int i = 0;
-    for(i=0;i<pauseTime*1000000;i++){
-    }
 }
