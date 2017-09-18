@@ -124,7 +124,7 @@ PUBLIC int get_ticks() {
     return msg.RETVAL;
 }
 
-PUBLIC void addTwoString(char *to_str,char *from_str1,char *from_str2) {
+PUBLIC void addTwoString(char *to_str, char *from_str1, char *from_str2) {
     int i = 0, j = 0;
     while (from_str1[i] != 0) {
         to_str[j++]=from_str1[i++];
@@ -240,7 +240,7 @@ void shell(char *tty_name) {
         }
 
         // Command "kill 5"
-        else if (strcmp(rdbuf, "kill 5") == 0){
+        else if (strcmp(rdbuf, "kill 5") == 0) {
             proc_table[5].p_flags = 1;
             ProcessManage();
         }
@@ -679,8 +679,9 @@ int verifyFilePass(char *path, int fd_stdin) {
     printl("Please input the file password: ");
     read(fd_stdin, pass, 128);
 
-    if (strcmp(pde->pass, pass) == 0)
+    if (strcmp(pde->pass, pass) == 0) {
         return 1;
+    }
 
     return 0;
 }
@@ -1099,7 +1100,7 @@ void game(int fd_stdin) {
 		while (left_coin != 15) {
 			clearArr(keys, 128);
             int r = read(fd_stdin, keys, 128);
-            if((keys[0] > '9') || (keys[0] < '0') || (keys[1] != ' ') || (keys[2] > '9') || (keys[2] < '0') || (keys[3] != 0)) {
+            if ((keys[0] > '9') || (keys[0] < '0') || (keys[1] != ' ') || (keys[2] > '9') || (keys[2] < '0') || (keys[3] != 0)) {
               	printf("Please input again!\n");
     			continue;
     		}
@@ -1157,7 +1158,7 @@ void game(int fd_stdin) {
  * @return
  */
 PUBLIC void judgeInpt(u32 key) {
-    char output[2] = {'\0', '\0'};
+    char output[2] = { '\0', '\0' };
     output[0] = key & 0xFF;
     if (output[0] == 'a') {
     	changeToLeft();
